@@ -1,0 +1,4 @@
+<view class="container">
+    <image class="myphoto" src="/images/welcome.png"></image>
+    <button bindtap="clickButton">查找吉他谱</button>
+</view>

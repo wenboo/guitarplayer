@@ -1,0 +1,9 @@
+<import src="../template/list.wxml" />
+
+<loading hidden="{{loading}}">
+  页面加载中...
+</loading>
+
+<view>
+    <template is="listTemp" data="{{listTitle:listTitle,listContent:listContent}}" />
+</view>

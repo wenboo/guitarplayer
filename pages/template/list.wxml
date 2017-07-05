@@ -1,0 +1,4 @@
+<template name="listTemp">
+    <view class="listTitle" wx-if="{{listTitle!=''}}">{{listTitle}}</view>
+    <view class="listContent"><text>{{listContent}}</text></view>
+</template>
