@@ -1,4 +1,17 @@
-<view class="container">
-    <image class="myphoto" src="/images/welcome.png"></image>
-    <button bindtap="clickButton">查找吉他谱</button>
-</view>
+<import src="../template/list.wxml" />
+
+<view class="content_detail" bindtap="clickButtonGuitarChart">
+      <view class="listTitle">吉他谱</view>
+</view> 
+
+<view class="content_detail" bindtap="clickButtonGuitarVideo">
+      <view class="listTitle">吉他视频</view>
+</view> 
+
+<view>
+      <image mpde="aspectFit" src="/images/welcome.png"> </image> 
+</view> 
+
+<view>
+      <text>趣玩吉他</text> 
+</view> 

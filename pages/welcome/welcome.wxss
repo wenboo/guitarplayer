@@ -18,3 +18,16 @@ page{
     height: 100%;
     background-color:#ffffff;
 }
+
+.content_detail, .comment_list {
+  overflow: hidden;
+  background: #fafafa;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.listTitle {
+  font-size: 18px;
+  color: #1e1e1e;
+  margin-bottom: 16rpx;
+}

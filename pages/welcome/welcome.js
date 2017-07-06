@@ -10,11 +10,10 @@ Page({
 
 
   /**
-   * button点击事件监听
+   * clickButtonGuitarChart 点击事件监听
    */
-  clickButton: function () {
-    // 打印所有关于点击对象的信息
-    // console.log("hello world");
+  clickButtonGuitarChart: function () {
+    console.log("[cheng-welcome]点击了 GuitarChart");
     wx.navigateTo({
       url: '../search/search',
       success: function (res) {
@@ -29,6 +28,25 @@ Page({
     }) 
   },
 
+  /**
+   * clickButtonGuitarVideo 点击事件监听
+   */
+  clickButtonGuitarVideo: function () {
+    // 打印所有关于点击对象的信息
+    // console.log("hello world");
+    wx.navigateTo({
+      url: '../search/search',
+      success: function (res) {
+        // success  
+      },
+      fail: function () {
+        // fail  
+      },
+      complete: function () {
+        // complete  
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
