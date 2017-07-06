@@ -1,8 +1,7 @@
 {
   "pages": [
     "pages/welcome/welcome",
-    "pages/search/search",
-    "pages/listDetail/listDetail"
+    "pages/search/search"
   ],
   "window": {
     "backgroundTextStyle": "light",

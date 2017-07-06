@@ -1,8 +1,0 @@
-<import src="../template/list.wxml" />
-
-<loading hidden="{{loading}}">
-  页面加载中...
-</loading>
-
-<image class="image_frame" src="{{imageUrl}}" mode="aspectFill"> 
-</image>

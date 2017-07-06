@@ -16,6 +16,12 @@ navigator {
   border-top: 1px solid #ededee;
 }
 
+.content_detail, .comment_list {
+  overflow: hidden;
+  background: #fafafa;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
 
 .listTitle {
   font-size: 18px;

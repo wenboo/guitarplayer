@@ -51,8 +51,8 @@ Page({
     
     getReturn(that);
 
-    var Diary = Bmob.Object.extend("Diary");
-    var query = new Bmob.Query(Diary);
+    var GuitarChart = Bmob.Object.extend("GuitarChart");
+    var query = new Bmob.Query(GuitarChart);
 
     //此处查一次总计条数
     query.count({
@@ -78,9 +78,61 @@ Page({
   * button点击事件监听
   */
   clickButton: function () {
-    // 打印所有关于点击对象的信息
-    console.log("[cheng-Search]clickButton");
-   
+
+    // 获取点击了条目的 index
+    var index = this.data.moodList[0].index;
+    console.log("[cheng-Search]点击了index为："+index+" 的条目");
+    // 根据 index 发起 GuitarChartFile 的查询
+    var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
+    var query = new Bmob.Query(GuitarChartFile);
+    // 条件查询
+    query.equalTo("index", index);
+    // 查询所有数据
+    query.find({
+      success: function (results) {
+        that.setData({
+          loading: true
+        });
+        
+        console.log("[cheng-Search]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
+        var imgUrls = new Array();
+        var url;
+
+        for (var i = 0; i < results.length; i++) 
+        {
+          url = results[i].get("url");
+          imgUrls.push(url);
+        }
+        console.log("[cheng-Search]吉他谱图片地址数组构建 OK");
+
+        // 微信预览开始
+        wx.previewImage({
+          // 不填写默认 urls 第一张
+          current: '',  
+          urls: [
+            'http://img.souutu.com/2016/0511/20160511055648316.jpg',
+            'http://img.souutu.com/2016/0511/20160511055650751.jpg',
+            'http://img.souutu.com/2016/0511/20160511054928658.jpg'
+          ],
+          //这根本就不走
+          success: function (res) {
+            console.log(res);
+          },
+          //也根本不走
+          fail: function () {
+            console.log('fail')
+          }
+        })
+      },
+      error: function (error) {
+        common.dataLoading(error, "loading");
+        // that.setData({
+        //   loading: true
+        // })
+        console.log(error)
+      }
+    });
+
   },
 
   /**
@@ -170,8 +222,8 @@ function getReturn() {
     success: function (ress) {
       if (ress.data) {
         // clearInterval(myInterval)
-        var Diary = Bmob.Object.extend("Diary");
-        var query = new Bmob.Query(Diary);
+        var GuitarChart = Bmob.Object.extend("GuitarChart");
+        var query = new Bmob.Query(GuitarChart);
 
         if (that.data.limit == that.data.pageSize) {
           query.limit(that.data.limit);
@@ -183,7 +235,7 @@ function getReturn() {
         // 条件查询
         query.equalTo("title", "hello");
        
-        console.log("[cheng]开始根据条件查询...");
+        console.log("[cheng-Search]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
@@ -191,7 +243,7 @@ function getReturn() {
               loading: true
             });
 
-            console.log("[cheng]查询成功，结果为: " + results.length +" 条数据");
+            console.log("[cheng-Search]查询成功，结果为: " + results.length +" 条数据");
             for (var i = 0; i < results.length; i++) {
        
               var title = results[i].get("title");
@@ -210,7 +262,7 @@ function getReturn() {
 
               molist.push(jsonA)
 
-              console.log("[cheng] set Data");
+              console.log("[cheng-Search]构建 ListView Item JSON 对象");
 
               that.setData({
                 
