@@ -3,9 +3,9 @@
 <import src="../template/list.wxml" />
 
 <view class="index_list">
-<navigator url="../listDetail/listDetail?moodId={{item.id}}" hover-class="navigator-hover" wx:for-items="{{moodList}}" wx:key="objectId" >
+<navigator url="../listDetail/listDetail?moodId={{item.id}}" hover-class="navigator-hover" wx:for-items="{{moodList}}" wx:key="index" >
     <template is="listTemp" data="{{listTitle:item.title,listContent:item.content}}" />
-  </navigator>
+ </navigator>
 </view>
 
 <view class="bord"></view>

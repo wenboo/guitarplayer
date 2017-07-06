@@ -75,6 +75,15 @@ Page({
   },
 
   /**
+  * button点击事件监听
+  */
+  clickButton: function () {
+    // 打印所有关于点击对象的信息
+    console.log("[cheng-Search]clickButton");
+   
+  },
+
+  /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
@@ -173,9 +182,7 @@ function getReturn() {
         
         // 条件查询
         query.equalTo("title", "hello");
-        // query.descending("title");
-        // query.include("publisher");
-
+       
         console.log("[cheng]开始根据条件查询...");
         // 查询所有数据
         query.find({
@@ -186,69 +193,20 @@ function getReturn() {
 
             console.log("[cheng]查询成功，结果为: " + results.length +" 条数据");
             for (var i = 0; i < results.length; i++) {
-              // var publisherId = results[i].get("publisher").id;
+       
               var title = results[i].get("title");
               var content = results[i].get("content");
-              // var id = results[i].id;
+              var index = results[i].get("index");
               var createdAt = results[i].createdAt;
-              // var _url;
-              // var likeNum = results[i].get("likeNum");
-              // var commentNum = results[i].get("commentNum");
-              // var pic = results[i].get("pic");
-              // if (pic) {
-              //   _url = results[i].get("pic")._url;
-              // }
-              // else {
-              //   _url = null;
-              // }
-              // var name = results[i].get("publisher").get("nickname");
-              // var userPic = results[i].get("publisher").get("userPic");
-              // var liker = results[i].get("liker");
-              // var isLike = 0;
-              // for (var j = 0; j < liker.length; j++) {
-              //  if (liker[j] == ress.data) {
-              //    isLike = 1;
-              //    break;
-              //  }
-              // }
+            
               
               var jsonA;
 
               jsonA = {
                 "title": title || '',
-                "content": content || ''
+                "content": content || '',
+                "index": index || ''
               }
-
-              /*
-              if (pic) {
-                jsonA = {
-                  "title": title || '',
-                  "content": content || '',
-                  "id": id || '',
-                  "avatar": userPic || '',
-                  "created_at": createdAt || '',
-                  "attachment": _url || '',
-                  "likes": likeNum,
-                  "comments": commentNum,
-                  "is_liked": isLike || '',
-                  "username": name || ''
-                }
-              }
-              else {
-                jsonA = {
-                  "title": title || '',
-                  "content": content || '',
-                  "id": id || '',
-                  "avatar": userPic || '',
-                  "created_at": createdAt || '',
-                  "attachment": _url || '',
-                  "likes": likeNum,
-                  "comments": commentNum,
-                  "is_liked": isLike || '',
-                  "username": name || ''
-                }
-              }
-              */
 
               molist.push(jsonA)
 
