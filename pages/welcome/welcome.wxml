@@ -1,17 +1,24 @@
 <import src="../template/list.wxml" />
 
-<view class="content_detail" bindtap="clickButtonGuitarChart">
-      <view class="listTitle">吉他谱</view>
-</view> 
+<!-- 总体是纵向布局-->
+<view class="welcome_page">
 
-<view class="content_detail" bindtap="clickButtonGuitarVideo">
-      <view class="listTitle">吉他视频</view>
-</view> 
+  <!-- Item 是横向布局 -->
+  <view class="welcome_item" bindtap="clickButtonGuitarChart">
+       <image class="item_img_icon" src="/images/chart.png"></image> 
+       <text class="item_text">吉他曲谱</text> 
+       <image class="item_img_arrow" src="/images/arrow.png"></image> 
+  </view> 
 
-<view>
-      <image mpde="aspectFit" src="/images/welcome.png"> </image> 
-</view> 
+  <view class="welcome_item" bindtap="clickButtonGuitarVideo">
+      <image class="item_img_icon" src="/images/video.png"></image> 
+      <text class="item_text">吉他视频</text>
+      <image class="item_img_arrow" src="/images/arrow.png"></image> 
+  </view> 
 
-<view>
-      <text>趣玩吉他</text> 
-</view> 
+  <view class="welcome_info">
+        <image class="img" src="/images/welcome.png"></image> 
+        <text class="text">趣玩吉他</text> 
+  </view> 
+
+</view>

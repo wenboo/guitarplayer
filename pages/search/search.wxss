@@ -16,7 +16,7 @@ navigator {
   border-top: 1px solid #ededee;
 }
 
-.content_detail, .comment_list {
+.content_detail{
   overflow: hidden;
   background: #fafafa;
   padding: 30rpx;

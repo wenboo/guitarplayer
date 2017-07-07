@@ -233,7 +233,7 @@ function getReturn() {
         }
         
         // 条件查询
-        query.equalTo("title", "hello");
+        query.equalTo("delete", "0");
        
         console.log("[cheng-Search]开始根据条件查询...");
         // 查询所有数据
