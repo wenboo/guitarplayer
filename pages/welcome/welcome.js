@@ -15,7 +15,7 @@ Page({
   clickButtonGuitarChart: function () {
     console.log("[cheng-welcome]点击了 GuitarChart");
     wx.navigateTo({
-      url: '../search/search',
+      url: '../chart/chart',
       success: function (res) {
         // success  
       },
@@ -35,7 +35,7 @@ Page({
     // 打印所有关于点击对象的信息
     // console.log("hello world");
     wx.navigateTo({
-      url: '../search/search',
+      url: '../video/video',
       success: function (res) {
         // success  
       },

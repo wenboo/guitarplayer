@@ -3,8 +3,8 @@ page {
 }
 
 .input{
-  text-align: center;
   font-size: 15px;
+  padding-left: 15px;
   padding-top: 5px;
   padding-bottom: 5px;
 }

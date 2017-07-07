@@ -2,8 +2,8 @@
 
 <import src="../template/list.wxml" />
 
-<view class="input_view">
-  <input class="input" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索"/>
+<view class="input_view" bindtap="chartSearch">
+  <input class="input" bindtap="chartSearch" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" disabled="true"/>
 </view>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="index" bindtap="clickButton">

@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/welcome/welcome",
-    "pages/search/search"
+    "pages/chart/chart",
+    "pages/chartSearch/chartSearch"
   ],
   "window": {
     "backgroundTextStyle": "light",

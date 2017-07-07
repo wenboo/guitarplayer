@@ -35,9 +35,10 @@ navigator {
   margin-top: 30rpx;
 }
 
+
 .listTitle {
   font-size: 18px;
-  color: #1e1e1e;
+  color: #515151;
   margin-bottom: 16rpx;
 }
 
@@ -48,8 +49,8 @@ navigator {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  color: #646464;
-  font-size: 16px;
+  color: #bfbfbf;
+  font-size: 12px;
   margin-bottom: 16rpx;
   max-height: 36px;
 }
@@ -62,6 +63,7 @@ navigator {
   z-index: 2;
   background: #000;
 }
+
 .returnTop{
   width:100rpx;
   height: 100rpx;
