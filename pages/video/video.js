@@ -13,9 +13,9 @@ Page({
    */
   data: {
     moodList: [],
-    pageSize: 12,          // 每次加载多少条
-    limit: 12,             // 跟上面要一致
-    loading: false,
+    pageSize: 3,          // 每次加载多少条
+    limit: 3,             // 跟上面要一致
+    //loading: false,
     windowHeight1: 0,
     windowWidth1: 0,
     count: 0,
@@ -31,7 +31,7 @@ Page({
   onLoad: function (options) {
     that = this;
     that.setData({
-      loading: false
+      //loading: false
     })
   },
 
@@ -39,7 +39,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    //this.videoContext = wx.createVideoContext('myVideo');
   },
 
   /**
@@ -74,66 +74,26 @@ Page({
     })
   },
 
-  /**
-  * button点击事件监听
-  */
-  clickButton: function () {
+ 
+/**
+ * 点击搜索跳转至吉他谱搜索界面
 
-    // 获取点击了条目的 index
-    var index = this.data.moodList[0].index;
-    console.log("[cheng-Search]点击了index为："+index+" 的条目");
-    // 根据 index 发起 GuitarChartFile 的查询
-    var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
-    var query = new Bmob.Query(GuitarChartFile);
-    // 条件查询
-    query.equalTo("index", index);
-    // 查询所有数据
-    query.find({
-      success: function (results) {
-        that.setData({
-          loading: true
-        });
+  chartSearch: function (e) {
+    console.log("[cheng-video.js] 开始搜索吉他视频");
+
+    wx.navigateTo({
+      url: '../chartSearch/chartSearch',
+      success: function (res) {
         
-        console.log("[cheng-Search]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
-        var imgUrls = new Array();
-        var url;
-
-        for (var i = 0; i < results.length; i++) 
-        {
-          url = results[i].get("url");
-          imgUrls.push(url);
-        }
-        console.log("[cheng-Search]吉他谱图片地址数组构建 OK");
-
-        // 微信预览开始
-        wx.previewImage({
-          // 不填写默认 urls 第一张
-          current: '',  
-          urls: [
-            'http://img.souutu.com/2016/0511/20160511055648316.jpg',
-            'http://img.souutu.com/2016/0511/20160511055650751.jpg',
-            'http://img.souutu.com/2016/0511/20160511054928658.jpg'
-          ],
-          //这根本就不走
-          success: function (res) {
-            console.log(res);
-          },
-          //也根本不走
-          fail: function () {
-            console.log('fail')
-          }
-        })
       },
-      error: function (error) {
-        common.dataLoading(error, "loading");
-        // that.setData({
-        //   loading: true
-        // })
-        console.log(error)
+      fail: function () {
+        // fail  
+      },
+      complete: function () {
+        // complete  
       }
-    });
-
-  },
+    })
+  }, */
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -212,7 +172,7 @@ function getReturn() {
   }
 
   that.setData({
-    loading: false
+    //loading: false
   });
 
   var molist = new Array();
@@ -222,8 +182,8 @@ function getReturn() {
     success: function (ress) {
       if (ress.data) {
         // clearInterval(myInterval)
-        var GuitarChart = Bmob.Object.extend("GuitarChart");
-        var query = new Bmob.Query(GuitarChart);
+        var GuitarVideo = Bmob.Object.extend("GuitarVideo");
+        var query = new Bmob.Query(GuitarVideo);
 
         if (that.data.limit == that.data.pageSize) {
           query.limit(that.data.limit);
@@ -235,37 +195,36 @@ function getReturn() {
         // 条件查询
         query.equalTo("delete", "0");
        
-        console.log("[cheng-Search]开始根据条件查询...");
+        console.log("[cheng-video.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
             that.setData({
-              loading: true
+              //loading: true
             });
 
-            console.log("[cheng-Search]查询成功，结果为: " + results.length +" 条数据");
+            console.log("[cheng-video.js]查询成功，结果为: " + results.length +" 条数据");
             for (var i = 0; i < results.length; i++) {
        
+              var url = results[i].get("url");
               var title = results[i].get("title");
-              var content = results[i].get("content");
-              var index = results[i].get("index");
               var createdAt = results[i].createdAt;
             
               
               var jsonA;
 
               jsonA = {
-                "title": title || '',
-                "content": content || '',
-                "index": index || ''
+                "url": url || '',
+                "title": title || ''
               }
 
               molist.push(jsonA)
+       
+              console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
 
-              console.log("[cheng-Search]构建 ListView Item JSON 对象");
+              //this.videoContext.seek(5);
 
               that.setData({
-                
                 moodList: molist,
                 // loading: true
               })

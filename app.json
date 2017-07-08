@@ -2,7 +2,9 @@
   "pages": [
     "pages/welcome/welcome",
     "pages/chart/chart",
-    "pages/chartSearch/chartSearch"
+    "pages/chartSearch/chartSearch",
+    "pages/video/video",
+    "pages/videoSearch/videoSearch"
   ],
   "window": {
     "backgroundTextStyle": "light",

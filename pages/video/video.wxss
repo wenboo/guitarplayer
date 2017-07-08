@@ -1,0 +1,82 @@
+page {
+  background: #ebebeb;
+}
+
+.input{
+  text-align: center;
+  font-size: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.input_view{
+  /*边界：大小1px, 为固体，为红色*/
+  border:  1px solid #d81e06;
+  /*边界角的弧度*/
+  border-radius: 30px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+navigator {
+  background: #fff;
+  margin-bottom: 30rpx;
+  padding: 40rpx 40rpx;
+  overflow: hidden;
+  border-bottom: 1px solid #ededee;
+  border-top: 1px solid #ededee;
+}
+
+
+
+.content_detail{
+  overflow: hidden;
+  margin-top: 60rpx;
+  background: #fafafa;
+}
+
+
+.listTitle {
+  font-size: 18px;
+  color: #515151;
+  margin-bottom: 16rpx;
+}
+
+.listContent {
+  line-height: 19px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: #bfbfbf;
+  font-size: 12px;
+  margin-left: 10rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+  max-height: 36px;
+}
+
+
+.loading {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background: #000;
+}
+
+.returnTop{
+  width:100rpx;
+  height: 100rpx;
+  background: url(http://bmob-cdn-7744.b0.upaiyun.com/2017/01/14/6bc44b6b40bde3ca803dca4dd101cba0.png) no-repeat;
+  padding: 0;
+  background-size: cover;
+  position: fixed;
+  right: 74rpx;
+  bottom: 100rpx;
+  border-bottom: 0;
+  border-top: 0;
+}
+.bord{height:1px;width:100%;position:fixed;bottom: 0;left:0;background:#ccc;}
