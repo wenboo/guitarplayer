@@ -5,6 +5,7 @@ var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
+//var videoContext;
 
 Page({
 
@@ -39,7 +40,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    //this.videoContext = wx.createVideoContext('myVideo');
+    
   },
 
   /**
@@ -208,6 +209,7 @@ function getReturn() {
        
               var url = results[i].get("url");
               var title = results[i].get("title");
+              var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
             
               
@@ -215,14 +217,16 @@ function getReturn() {
 
               jsonA = {
                 "url": url || '',
-                "title": title || ''
+                "title": title || '',
+                "poster": poster || ''
               }
 
               molist.push(jsonA)
        
               console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
 
-              //this.videoContext.seek(5);
+              var videoContext = wx.createVideoContext('myVideo');
+              videoContext.seek(5);
 
               that.setData({
                 moodList: molist,

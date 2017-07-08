@@ -7,7 +7,7 @@
 </view>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="index">
-  <template is="listTemp" data="{{url:item.url,title:item.title}}" />
+  <template is="listTemp" data="{{url:item.url,title:item.title,poster:item.poster}}" />
 </view>
 
 <view class="bord"></view>
