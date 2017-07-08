@@ -15,7 +15,7 @@ Page({
     moodList: [],
     pageSize: 12,          // 每次加载多少条
     limit: 12,             // 跟上面要一致
-    loading: false,
+    //loading: false,
     windowHeight1: 0,
     windowWidth1: 0,
     count: 0,
@@ -31,7 +31,7 @@ Page({
   onLoad: function (options) {
     that = this;
     that.setData({
-      loading: false
+      //loading: false
     })
   },
 
@@ -79,10 +79,11 @@ Page({
  */
   chartSearch: function (e) {
     console.log("[cheng-chart.js] 开始搜索吉他谱");
+
     wx.navigateTo({
       url: '../chartSearch/chartSearch',
       success: function (res) {
-        // success  
+        
       },
       fail: function () {
         // fail  
@@ -110,7 +111,7 @@ Page({
     query.find({
       success: function (results) {
         that.setData({
-          loading: true
+          //loading: true
         });
         
         console.log("[cheng-Search]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
@@ -231,7 +232,7 @@ function getReturn() {
   }
 
   that.setData({
-    loading: false
+    //loading: false
   });
 
   var molist = new Array();
@@ -259,7 +260,7 @@ function getReturn() {
         query.find({
           success: function (results) {
             that.setData({
-              loading: true
+              //loading: true
             });
 
             console.log("[cheng-Search]查询成功，结果为: " + results.length +" 条数据");

@@ -3,7 +3,7 @@
 <import src="../template/list.wxml" />
 
 <view class="input_view">
-  <input class="input" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true"/>
+  <input class="input" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true" confirm-type="search"/>
 </view>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="index" bindtap="clickButton">
@@ -11,7 +11,6 @@
 </view>
 
 <view class="bord"></view>
-
 
 <view class="returnTop"  wx:if="{{scrollTop.goTop_show}}" catchtap="goTopFun">
 </view>

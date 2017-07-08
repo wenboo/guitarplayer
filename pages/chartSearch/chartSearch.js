@@ -6,12 +6,15 @@ var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
 
+document.onkeydown = keyDownSearch;
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    inputValue: "",
     moodList: [],
     pageSize: 12,          // 每次加载多少条
     limit: 12,             // 跟上面要一致
@@ -77,6 +80,15 @@ Page({
     */
   },
 
+  /*
+  bindKeyInput: function (e) {
+    this.setData({
+      inputValue: e.detail.value
+    })
+
+    console.log("[cheng-chartSearch.js]"+this.data.inputValue);
+  },
+  */
   /**
   * button点击事件监听
   */
