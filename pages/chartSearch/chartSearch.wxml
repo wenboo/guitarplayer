@@ -1,10 +1,12 @@
-<loading hidden="{{loading}}">加载中...</loading>
+<!--<loading hidden="{{loading}}">加载中...</loading>-->
 
 <import src="../template/list.wxml" />
 
+<form bindsubmit="searchSubmit">
 <view class="input_view">
-  <input class="input" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true" confirm-type="search"/>
+  <input class="input" bindblur="lostFocus" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true" confirm-type="search"/>
 </view>
+</form>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="index" bindtap="clickButton">
   <template is="listTemp" data="{{listTitle:item.title,listContent:item.content}}" />

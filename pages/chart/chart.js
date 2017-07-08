@@ -74,6 +74,7 @@ Page({
     })
   },
 
+ 
 /**
  * 点击搜索跳转至吉他谱搜索界面
  */
@@ -101,7 +102,7 @@ Page({
 
     // 获取点击了条目的 index
     var index = this.data.moodList[0].index;
-    console.log("[cheng-Search]点击了index为："+index+" 的条目");
+    console.log("[cheng-chart.js]点击了index为："+index+" 的条目");
     // 根据 index 发起 GuitarChartFile 的查询
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
     var query = new Bmob.Query(GuitarChartFile);
@@ -114,7 +115,7 @@ Page({
           //loading: true
         });
         
-        console.log("[cheng-Search]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
+        console.log("[cheng-chart.js]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
         var imgUrls = new Array();
         var url;
 
@@ -123,7 +124,7 @@ Page({
           url = results[i].get("url");
           imgUrls.push(url);
         }
-        console.log("[cheng-Search]吉他谱图片地址数组构建 OK");
+        console.log("[cheng-chart.js]吉他谱图片地址数组构建 OK");
 
         // 微信预览开始
         wx.previewImage({
@@ -255,7 +256,7 @@ function getReturn() {
         // 条件查询
         query.equalTo("delete", "0");
        
-        console.log("[cheng-Search]开始根据条件查询...");
+        console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
@@ -263,7 +264,7 @@ function getReturn() {
               //loading: true
             });
 
-            console.log("[cheng-Search]查询成功，结果为: " + results.length +" 条数据");
+            console.log("[cheng-chart.js]查询成功，结果为: " + results.length +" 条数据");
             for (var i = 0; i < results.length; i++) {
        
               var title = results[i].get("title");
@@ -282,7 +283,7 @@ function getReturn() {
 
               molist.push(jsonA)
 
-              console.log("[cheng-Search]构建 ListView Item JSON 对象");
+              console.log("[cheng-chart.js]构建 ListView Item JSON 对象");
 
               that.setData({
                 

@@ -13,7 +13,7 @@ Page({
    * clickButtonGuitarChart 点击事件监听
    */
   clickButtonGuitarChart: function () {
-    console.log("[cheng-welcome]点击了 GuitarChart");
+    console.log("[cheng-welcome.js]点击了 GuitarChart");
     wx.navigateTo({
       url: '../chart/chart',
       success: function (res) {
