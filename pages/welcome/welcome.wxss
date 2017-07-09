@@ -6,7 +6,7 @@
 .welcome_item{
   align-items: center;
   overflow: hidden;
-  background: #fafafa;
+  background: #f8f8f8;  /*ebebeb*/
   padding: 30rpx;
   margin-left:30rpx; 
   margin-right:30rpx; 

@@ -1,16 +1,19 @@
 // welcome.js
+
+var that;
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-  
+    
   },
 
 
   /**
-   * clickButtonGuitarChart 点击事件监听
+   *  进入“吉他曲谱” 模块
    */
   clickButtonGuitarChart: function () {
     console.log("[cheng-welcome.js]点击了 GuitarChart");
@@ -29,7 +32,7 @@ Page({
   },
 
   /**
-   * clickButtonGuitarVideo 点击事件监听
+   * 进入 “吉他视频” 模块
    */
   clickButtonGuitarVideo: function () {
     // 打印所有关于点击对象的信息
@@ -52,7 +55,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    that = this;
   },
 
   /**

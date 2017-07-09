@@ -78,12 +78,13 @@ Page({
  
 /**
  * 点击搜索跳转至吉他谱搜索界面
+ */
 
-  chartSearch: function (e) {
+  videoSearch: function (e) {
     console.log("[cheng-video.js] 开始搜索吉他视频");
 
     wx.navigateTo({
-      url: '../chartSearch/chartSearch',
+      url: '../videoSearch/videoSearch',
       success: function (res) {
         
       },
@@ -94,7 +95,7 @@ Page({
         // complete  
       }
     })
-  }, */
+  }, 
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -195,8 +196,9 @@ function getReturn() {
         
         // 条件查询
         query.equalTo("delete", "0");
-       
+        query.descending("createdAt");  
         console.log("[cheng-video.js]开始根据条件查询...");
+
         // 查询所有数据
         query.find({
           success: function (results) {

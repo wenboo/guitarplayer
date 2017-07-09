@@ -77,6 +77,7 @@ Page({
     var query = new Bmob.Query(GuitarChartFile);
     // 条件查询
     query.equalTo("index", index);
+    query.descending("createdAt");                   
     // 查询所有数据
     query.find({
       success: function (results) {
@@ -219,14 +220,16 @@ function startToSearch(searchContent) {
         // 作者
         query1.equalTo("delete", "0");
         query1.equalTo("title", searchContent);
-
+        //query1.descending("createdAt");                
         // 吉他谱名字
         var query2 = new Bmob.Query(GuitarChart);
         query2.equalTo("delete", "0");
         query2.equalTo("content", searchContent);
+        //query2.descending("createdAt");   
 
         var query = Bmob.Query.or(query1,query2);
-
+        query.descending("createdAt");
+        
         if (that.data.limit == that.data.pageSize) {
           query.limit(that.data.limit);
         }

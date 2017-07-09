@@ -107,7 +107,8 @@ Page({
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
     var query = new Bmob.Query(GuitarChartFile);
     // 条件查询
-    query.equalTo("index", index);
+    query.equalTo("index", index);                
+    query.descending("createdAt");             
     // 查询所有数据
     query.find({
       success: function (results) {
@@ -255,7 +256,8 @@ function getReturn() {
         
         // 条件查询
         query.equalTo("delete", "0");
-       
+        query.descending("createdAt");          
+
         console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({

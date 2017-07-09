@@ -5,15 +5,15 @@
 
   <!-- Item 是横向布局 -->
   <view class="welcome_item" bindtap="clickButtonGuitarChart">
-       <image class="item_img_icon" src="/images/chart.png"></image> 
-       <text class="item_text">吉他曲谱</text> 
-       <image class="item_img_arrow" src="/images/arrow.png"></image> 
+       <image class="item_img_icon" src="/images/chart.png" bindtap="clickButtonGuitarChart"></image> 
+       <text class="item_text" bindtap="clickButtonGuitarChart">吉他曲谱</text> 
+       <image class="item_img_arrow" src="/images/arrow.png" bindtap="clickButtonGuitarChart"></image> 
   </view> 
 
   <view class="welcome_item" bindtap="clickButtonGuitarVideo">
-      <image class="item_img_icon" src="/images/video.png"></image> 
-      <text class="item_text">吉他视频</text>
-      <image class="item_img_arrow" src="/images/arrow.png"></image> 
+      <image class="item_img_icon" src="/images/video.png" bindtap="clickButtonGuitarVideo"></image> 
+      <text class="item_text" bindtap="clickButtonGuitarVideo">吉他视频</text>
+      <image class="item_img_arrow" src="/images/arrow.png" bindtap="clickButtonGuitarVideo"></image> 
   </view> 
 
   <view class="welcome_info">
