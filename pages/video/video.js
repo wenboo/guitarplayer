@@ -1,11 +1,10 @@
-// search.js
+// video.js
 
 //获取应用实例
 var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-//var videoContext;
 
 Page({
 
@@ -116,7 +115,13 @@ Page({
    */
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh();
-    var limit = that.data.limit
+    var limit = that.data.limit;
+    //如果是最后一页则不执行下面代码
+    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+      console.log("stop");
+      common.showModal("已经是最后一页");
+      return false;
+    }
     console.log("下拉刷新....." + that.data.limit)
     that.setData({
       limit: that.data.pageSize,
@@ -131,6 +136,14 @@ Page({
   onReachBottom: function () {
     var limit = that.data.limit
     console.log("上拉加载更多...." + that.data.limit)
+
+    //如果是最后一页则不执行下面代码
+    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+      console.log("[cheng-video.js]已经是最后一页");
+      common.showModal("已经是最后一页");
+      return false;
+    }
+
     that.setData({
       limit: limit + that.data.pageSize,
 
@@ -168,8 +181,8 @@ function getReturn() {
 
   //如果是最后一页则不执行下面代码
   if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-    console.log("stop")
-    common.showModal("已经是最后一页")
+    console.log("stop");
+    common.showModal("已经是最后一页");
     return false;
   }
 
@@ -226,9 +239,6 @@ function getReturn() {
               molist.push(jsonA)
        
               console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
-
-              var videoContext = wx.createVideoContext('myVideo');
-              videoContext.seek(5);
 
               that.setData({
                 moodList: molist,

@@ -13,8 +13,8 @@ Page({
    */
   data: {
     moodList: [],
-    pageSize: 12,          // 每次加载多少条
-    limit: 12,             // 跟上面要一致
+    pageSize: 8,          // 每次加载多少条
+    limit: 8,             // 跟上面要一致
     //loading: false,
     windowHeight1: 0,
     windowWidth1: 0,
@@ -176,7 +176,13 @@ Page({
    */
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh();
-    var limit = that.data.limit
+    //如果是最后一页则不执行下面代码
+    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+      console.log("stop");
+      common.showModal("已经是最后一页");
+      return false;
+    }
+    var limit = that.data.limit;
     console.log("下拉刷新....." + that.data.limit)
     that.setData({
       limit: that.data.pageSize,
@@ -189,8 +195,14 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    //如果是最后一页则不执行下面代码
+    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+      console.log("stop");
+      common.showModal("已经是最后一页");
+      return false;
+    }
     var limit = that.data.limit
-    console.log("上拉加载更多...." + that.data.limit)
+    console.log("上拉加载更多....[limit]" + that.data.limit)
     that.setData({
       limit: limit + that.data.pageSize,
 
