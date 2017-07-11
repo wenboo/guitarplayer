@@ -6,7 +6,7 @@
   <input class="input" bindfocus="videoSearch" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索"/>
 </view>
 
-<view class="content_detail" wx:for-items="{{moodList}}" wx:key="index">
+<view class="content_detail" wx:for-items="{{moodList}}" wx:key="url">
   <template is="listTemp" data="{{url:item.url,title:item.title,poster:item.poster}}" />
 </view>
 

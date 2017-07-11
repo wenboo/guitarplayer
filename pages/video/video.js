@@ -5,7 +5,7 @@ var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-
+var size = 3;
 Page({
 
   /**
@@ -13,43 +13,20 @@ Page({
    */
   data: {
     moodList: [],
-    pageSize: 3,          // 每次加载多少条
-    limit: 3,             // 跟上面要一致
+    pageSize: size,          // 每次加载多少条
+    limit: size,             // 跟上面要一致
     //loading: false,
-    windowHeight1: 0,
-    windowWidth1: 0,
     count: 0,
-    scrollTop: {
-      scroll_top1: 0,
-      goTop_show: false
-    }
+    isInit: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log("[cheng-chart.js]----------onLoad----------");
+ 
     that = this;
-    that.setData({
-      //loading: false
-    })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-    
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    var molist = new Array();
-    that = this;
-    
-    getReturn(that);
 
     var GuitarVideo = Bmob.Object.extend("GuitarVideo");
     var query = new Bmob.Query(GuitarVideo);
@@ -60,24 +37,39 @@ Page({
         that.setData({
           count: results
         })
-        console.log(that.data.count, results)
+
+        console.log("[cheng-chart.js] onLoad check cid counts ---> " + that.data.count);
+        getData(that);
       }
     });
 
-    wx.getSystemInfo({
-      success: (res) => {
-        that.setData({
-          windowHeight1: res.windowHeight,
-          windowWidth1: res.windowWidth
-        })
-      }
+    
+
+    that.setData({
+      //loading: false
     })
   },
 
- 
-/**
- * 点击搜索跳转至吉他谱搜索界面
- */
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    console.log("[cheng-chart.js]----------onShow----------");
+    // that = this;
+    // getData(that);
+  },
+
+
+  /**
+   * 点击搜索跳转至吉他谱搜索界面
+   */
 
   videoSearch: function (e) {
     console.log("[cheng-video.js] 开始搜索吉他视频");
@@ -85,7 +77,7 @@ Page({
     wx.navigateTo({
       url: '../videoSearch/videoSearch',
       success: function (res) {
-        
+
       },
       fail: function () {
         // fail  
@@ -94,80 +86,50 @@ Page({
         // complete  
       }
     })
-  }, 
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+    console.log("[cheng-video.js]----------onHide----------");
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    wx.stopPullDownRefresh();
-    var limit = that.data.limit;
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
-      common.showModal("已经是最后一页");
-      return false;
-    }
-    console.log("下拉刷新....." + that.data.limit)
-    that.setData({
-      limit: that.data.pageSize,
-
-    })
-    that.onShow()
+    console.log("[cheng-video.js]----------onUnload----------");
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    var limit = that.data.limit
-    console.log("上拉加载更多...." + that.data.limit)
-
+    var that = this;
     //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("[cheng-video.js]已经是最后一页");
+    //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+    if(that.data.count <= 0)
+    {
+      console.log("stop");
       common.showModal("已经是最后一页");
       return false;
     }
-
+    var limit = that.data.limit
+    console.log("上拉加载更多....[limit]" + that.data.limit)
     that.setData({
       limit: limit + that.data.pageSize,
 
     });
-    this.onShow()
-  },
-
-  scrollTopFun: function (e) {
-    if (e.detail.scrollTop > 300) {
-      this.setData({
-        'scrollTop.goTop_show': true
-      });
-    } else {
-      this.setData({
-        'scrollTop.goTop_show': false
-      });
-    }
+    //this.onShow()
+    getData(that);
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    // 转发?
+    // 转发
     return {
       title: '心邮',
       desc: '倾诉烦恼，邮寄心情，分享快乐',
@@ -177,10 +139,12 @@ Page({
 })
 
 
-function getReturn() {
+function getData(that) {
 
   //如果是最后一页则不执行下面代码
-  if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+  //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+  if(that.data.count <= 0)
+  {
     console.log("stop");
     common.showModal("已经是最后一页");
     return false;
@@ -191,6 +155,7 @@ function getReturn() {
   });
 
   var molist = new Array();
+  var lastid = 0;
 
   wx.getStorage({
     key: 'user_id',
@@ -200,18 +165,22 @@ function getReturn() {
         var GuitarVideo = Bmob.Object.extend("GuitarVideo");
         var query = new Bmob.Query(GuitarVideo);
 
+        /*
         if (that.data.limit == that.data.pageSize) {
           query.limit(that.data.limit);
         }
         if (that.data.limit > that.data.pageSize) {
           query.limit(that.data.limit)
         }
-        
+        */
+
         // 条件查询
         query.equalTo("delete", "0");
-        query.descending("createdAt");  
-        console.log("[cheng-video.js]开始根据条件查询...");
+        query.lessThan("vid", that.data.count);
+        query.limit(size);
+        query.descending("createdAt");
 
+        console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
@@ -219,15 +188,14 @@ function getReturn() {
               //loading: true
             });
 
-            console.log("[cheng-video.js]查询成功，结果为: " + results.length +" 条数据");
+            console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
             for (var i = 0; i < results.length; i++) {
-       
               var url = results[i].get("url");
               var title = results[i].get("title");
               var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
-            
-              
+              lastid = results[i].get("vid");
+
               var jsonA;
 
               jsonA = {
@@ -235,16 +203,14 @@ function getReturn() {
                 "title": title || '',
                 "poster": poster || ''
               }
-
-              molist.push(jsonA)
-       
+              molist.push(jsonA);
               console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
-
-              that.setData({
-                moodList: molist,
-                // loading: true
-              })
             }
+            that.setData({
+              count: lastid,
+              moodList: that.data.moodList.concat(molist)
+              // loading: true
+            })
           },
           error: function (error) {
             common.dataLoading(error, "loading");

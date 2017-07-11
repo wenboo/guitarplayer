@@ -1,10 +1,9 @@
-// search.js
-
 //获取应用实例
 var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
+var size = 6;
 
 Page({
 
@@ -13,43 +12,20 @@ Page({
    */
   data: {
     moodList: [],
-    pageSize: 8,          // 每次加载多少条
-    limit: 8,             // 跟上面要一致
+    pageSize: size,          // 每次加载多少条
+    limit: size,             // 跟上面要一致
     //loading: false,
-    windowHeight1: 0,
-    windowWidth1: 0,
     count: 0,
-    scrollTop: {
-      scroll_top1: 0,
-      goTop_show: false
-    }
+    isInit:false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    that = this;
-    that.setData({
-      //loading: false
-    })
-  },
+    console.log("[cheng-chart.js]----------onLoad----------");
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    var molist = new Array();
     that = this;
-    
-    getReturn(that);
 
     var GuitarChart = Bmob.Object.extend("GuitarChart");
     var query = new Bmob.Query(GuitarChart);
@@ -60,31 +36,46 @@ Page({
         that.setData({
           count: results
         })
-        console.log(that.data.count, results)
+
+        console.log("[cheng-chart.js] onLoad check cid counts ---> " + that.data.count);
+        getData(that);
       }
     });
 
-    wx.getSystemInfo({
-      success: (res) => {
-        that.setData({
-          windowHeight1: res.windowHeight,
-          windowWidth1: res.windowWidth
-        })
-      }
+    
+
+    that.setData({
+      //loading: false
     })
   },
 
- 
-/**
- * 点击搜索跳转至吉他谱搜索界面
- */
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+    console.log("[cheng-chart.js]]----------onReady----------");
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    console.log("[cheng-chart.js]----------onShow----------");
+    // that = this;
+    // getData(that);
+  },
+
+
+  /**
+   * 点击搜索跳转至吉他谱搜索界面
+   */
   chartSearch: function (e) {
     console.log("[cheng-chart.js] 开始搜索吉他谱");
 
     wx.navigateTo({
       url: '../chartSearch/chartSearch',
       success: function (res) {
-        
+
       },
       fail: function () {
         // fail  
@@ -102,26 +93,25 @@ Page({
 
     // 获取点击了条目的 index
     var index = this.data.moodList[0].index;
-    console.log("[cheng-chart.js]点击了index为："+index+" 的条目");
+    console.log("[cheng-chart.js]点击了index为：" + index + " 的条目");
     // 根据 index 发起 GuitarChartFile 的查询
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
     var query = new Bmob.Query(GuitarChartFile);
     // 条件查询
-    query.equalTo("index", index);                
-    query.descending("createdAt");             
+    query.equalTo("index", index);
+    query.descending("createdAt");
     // 查询所有数据
     query.find({
       success: function (results) {
         that.setData({
           //loading: true
         });
-        
+
         console.log("[cheng-chart.js]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
         var imgUrls = new Array();
         var url;
 
-        for (var i = 0; i < results.length; i++) 
-        {
+        for (var i = 0; i < results.length; i++) {
           url = results[i].get("url");
           imgUrls.push(url);
         }
@@ -130,7 +120,7 @@ Page({
         // 微信预览开始
         wx.previewImage({
           // 不填写默认 urls 第一张
-          current: '',  
+          current: '',
           urls: [
             'http://img.souutu.com/2016/0511/20160511055648316.jpg',
             'http://img.souutu.com/2016/0511/20160511055650751.jpg',
@@ -161,40 +151,21 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+    console.log("[cheng-chart.js]----------onHide----------");
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    wx.stopPullDownRefresh();
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
-      common.showModal("已经是最后一页");
-      return false;
-    }
-    var limit = that.data.limit;
-    console.log("下拉刷新....." + that.data.limit)
-    that.setData({
-      limit: that.data.pageSize,
-
-    })
-    that.onShow()
+    console.log("[cheng-chart.js]----------onUnload----------");
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    var that = this;
     //如果是最后一页则不执行下面代码
     if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
       console.log("stop");
@@ -207,26 +178,15 @@ Page({
       limit: limit + that.data.pageSize,
 
     });
-    this.onShow()
-  },
-
-  scrollTopFun: function (e) {
-    if (e.detail.scrollTop > 300) {
-      this.setData({
-        'scrollTop.goTop_show': true
-      });
-    } else {
-      this.setData({
-        'scrollTop.goTop_show': false
-      });
-    }
+    //this.onShow()
+    getData(that);
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    // 转发?
+    // 转发
     return {
       title: '心邮',
       desc: '倾诉烦恼，邮寄心情，分享快乐',
@@ -236,12 +196,12 @@ Page({
 })
 
 
-function getReturn() {
+function getData(that) {
 
   //如果是最后一页则不执行下面代码
   if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-    console.log("stop")
-    common.showModal("已经是最后一页")
+    console.log("stop");
+    common.showModal("已经是最后一页");
     return false;
   }
 
@@ -250,6 +210,7 @@ function getReturn() {
   });
 
   var molist = new Array();
+  var lastid = 0;
 
   wx.getStorage({
     key: 'user_id',
@@ -265,11 +226,12 @@ function getReturn() {
         if (that.data.limit > that.data.pageSize) {
           query.limit(that.data.limit)
         }
-        
+
         // 条件查询
         query.equalTo("delete", "0");
-        query.descending("createdAt");          
-
+        query.lessThan("cid",that.data.count);
+        query.descending("createdAt");
+        
         console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
@@ -278,33 +240,32 @@ function getReturn() {
               //loading: true
             });
 
-            console.log("[cheng-chart.js]查询成功，结果为: " + results.length +" 条数据");
-            for (var i = 0; i < results.length; i++) {
-       
+            console.log("[cheng-chart.js]查询成功，结果为: " + results.length + " 条数据");
+            for (var i = 0; i < results.length; i++) 
+            {
+
               var title = results[i].get("title");
               var content = results[i].get("content");
               var index = results[i].get("index");
               var createdAt = results[i].createdAt;
-            
-              
+              lastid = results[i].get("cid");
               var jsonA;
-
               jsonA = {
                 "title": title || '',
                 "content": content || '',
                 "index": index || ''
               }
-
-              molist.push(jsonA)
-
-              console.log("[cheng-chart.js]构建 ListView Item JSON 对象");
-
-              that.setData({
-                
-                moodList: molist,
-                // loading: true
-              })
+              molist.push(jsonA);
+              
             }
+
+            
+            console.log("[cheng-chart.js]构建 ListView Item JSON 对象");
+            that.setData({
+              count:lastid,
+              moodList: that.data.moodList.concat(molist)
+              // loading: true
+            })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
