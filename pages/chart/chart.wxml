@@ -7,14 +7,14 @@
 </view>
 
 <!-- scroll view start -->
-<scroll-view scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{scrollHeight}}px;" bindscrolltolower="bindDownLoad" bindscroll="scroll" bindscrolltoupper="refresh">
+<!-- scroll-view scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{scrollHeight}}px;" bindscrolltolower="bindDownLoad" bindscroll="scroll" bindscrolltoupper="refresh" -->
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="index" bindtap="clickButton">
   <template is="listTemp" data="{{listTitle:item.title,listContent:item.content}}" />
 </view>
 
-</scroll-view>
-<!-- scroll view end -->
+<!--/scroll-view -->
+
 
 <view class="bord"></view>
 

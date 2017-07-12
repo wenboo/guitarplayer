@@ -5,13 +5,14 @@ var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-var size = 3;
+var size = 4;
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    loadingData:false,
     moodList: [],
     pageSize: size,          // 每次加载多少条
     limit: size,             // 跟上面要一致
@@ -25,9 +26,15 @@ Page({
    */
   onLoad: function (options) {
     console.log("[cheng-chart.js]----------onLoad----------");
- 
+
     that = this;
 
+    // onLoad 时候会请求数据条目总数，防止在此过程中下拉至底部
+    that.setData({
+      loadingData: true
+    })
+    
+    console.log("[cheng-chart.js]设置了全局加载标记 -->" + that.data.loadingData);
     var GuitarVideo = Bmob.Object.extend("GuitarVideo");
     var query = new Bmob.Query(GuitarVideo);
 
@@ -38,23 +45,17 @@ Page({
           count: results
         })
 
-        console.log("[cheng-chart.js] onLoad check cid counts ---> " + that.data.count);
         getData(that);
       }
     });
 
-    
-
-    that.setData({
-      //loading: false
-    })
-  },
+},
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    console.log("[cheng-video.js]]----------onReady----------");
   },
 
   /**
@@ -106,23 +107,34 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    console.log("[cheng-video.js]上拉加载更多 ...");
     var that = this;
-    //如果是最后一页则不执行下面代码
+    // 如果是最后一页则不执行下面代码
     //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
     if(that.data.count <= 0)
     {
-      console.log("stop");
+      console.log("[cheng-video.js]最后一页 stop");
       common.showModal("已经是最后一页");
       return false;
     }
-    var limit = that.data.limit
+
+    /*
+    var limit = that.data.limit 
     console.log("上拉加载更多....[limit]" + that.data.limit)
     that.setData({
       limit: limit + that.data.pageSize,
-
     });
-    //this.onShow()
-    getData(that);
+    */
+
+    // this.onShow()
+    // 如果没有在加载数据过程中，下拉加载才有效，避免多次加载
+    if(!that.data.loadingData)
+    {
+      console.log("[cheng-video.js]loadingData 为 false，开始继续加载数据 ...");
+      getData(that);
+    }
+    
+    console.log("[cheng-video.js]已经在加载数据了，等等吧 ...");
   },
 
   /**
@@ -141,6 +153,14 @@ Page({
 
 function getData(that) {
 
+  console.log("[cheng-video.js]上拉 OK 了，准备 ...");
+
+  // 开始检索和加载数据
+  that.setData({
+    loadingData: true
+  });
+
+
   //如果是最后一页则不执行下面代码
   //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
   if(that.data.count <= 0)
@@ -149,10 +169,6 @@ function getData(that) {
     common.showModal("已经是最后一页");
     return false;
   }
-
-  that.setData({
-    //loading: false
-  });
 
   var molist = new Array();
   var lastid = 0;
@@ -178,16 +194,17 @@ function getData(that) {
         query.equalTo("delete", "0");
         query.lessThan("vid", that.data.count);
         query.limit(size);
-        query.descending("createdAt");
+        query.descending("vid");
 
         console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
+            /*
             that.setData({
               //loading: true
             });
-
+           */
             console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
             for (var i = 0; i < results.length; i++) {
               var url = results[i].get("url");
@@ -195,6 +212,7 @@ function getData(that) {
               var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
               lastid = results[i].get("vid");
+              console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + title);
 
               var jsonA;
 
@@ -204,19 +222,20 @@ function getData(that) {
                 "poster": poster || ''
               }
               molist.push(jsonA);
-              console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
+              
             }
             that.setData({
               count: lastid,
+              loadingData:false,
               moodList: that.data.moodList.concat(molist)
               // loading: true
             })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
-            // that.setData({
-            //   loading: true
-            // })
+             that.setData({
+               loadingData: false
+             })
             console.log(error)
           }
         });
@@ -225,6 +244,9 @@ function getData(that) {
 
     },
     fail: function (error) {
+      that.setData({
+        loadingData: false
+      })
       console.log("失败")
     }
   })

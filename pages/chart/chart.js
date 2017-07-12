@@ -1,3 +1,4 @@
+// chart.js
 //获取应用实例
 var common = require('../../utils/common.js')
 var app = getApp()
@@ -11,12 +12,13 @@ Page({
    * 页面的初始数据
    */
   data: {
+    loadingData:true,
     moodList: [],
     pageSize: size,          // 每次加载多少条
     limit: size,             // 跟上面要一致
     //loading: false,
     count: 0,
-    isInit:false,
+    isInit: false,
   },
 
   /**
@@ -27,6 +29,12 @@ Page({
 
     that = this;
 
+    // onLoad 时候会请求数据条目总数，防止在此过程中下拉至底部
+    that.setData({
+      loadingData: true
+    })
+    
+    console.log("[cheng-chart.js]设置了全局加载标记 -->" + that.data.loadingData);
     var GuitarChart = Bmob.Object.extend("GuitarChart");
     var query = new Bmob.Query(GuitarChart);
 
@@ -37,17 +45,11 @@ Page({
           count: results
         })
 
-        console.log("[cheng-chart.js] onLoad check cid counts ---> " + that.data.count);
         getData(that);
       }
     });
 
-    
-
-    that.setData({
-      //loading: false
-    })
-  },
+},
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -165,21 +167,34 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    console.log("[cheng-chart.js]上拉加载更多 ...");
     var that = this;
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
+    // 如果是最后一页则不执行下面代码
+    //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+    if(that.data.count <= 0)
+    {
+      console.log("[cheng-video.js]最后一页 stop");
       common.showModal("已经是最后一页");
       return false;
     }
-    var limit = that.data.limit
+
+    /*
+    var limit = that.data.limit 
     console.log("上拉加载更多....[limit]" + that.data.limit)
     that.setData({
       limit: limit + that.data.pageSize,
-
     });
-    //this.onShow()
-    getData(that);
+    */
+
+    // this.onShow()
+    // 如果没有在加载数据过程中，下拉加载才有效，避免多次加载
+    if(!that.data.loadingData)
+    {
+      console.log("[cheng-chart.js]loadingData 为 false，开始继续加载数据 ...");
+      getData(that);
+    }
+    
+    console.log("[cheng-video.js]已经在加载数据了，等等吧 ...");
   },
 
   /**
@@ -198,16 +213,22 @@ Page({
 
 function getData(that) {
 
+  console.log("[cheng-chart.js]上拉 OK 了，准备 ...");
+
+  // 开始检索和加载数据
+  that.setData({
+    loadingData: true
+  });
+
+
   //如果是最后一页则不执行下面代码
-  if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+  //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+  if(that.data.count <= 0)
+  {
     console.log("stop");
     common.showModal("已经是最后一页");
     return false;
   }
-
-  that.setData({
-    //loading: false
-  });
 
   var molist = new Array();
   var lastid = 0;
@@ -220,35 +241,39 @@ function getData(that) {
         var GuitarChart = Bmob.Object.extend("GuitarChart");
         var query = new Bmob.Query(GuitarChart);
 
+        /*
         if (that.data.limit == that.data.pageSize) {
           query.limit(that.data.limit);
         }
         if (that.data.limit > that.data.pageSize) {
           query.limit(that.data.limit)
         }
+        */
 
         // 条件查询
         query.equalTo("delete", "0");
         query.lessThan("cid",that.data.count);
-        query.descending("createdAt");
+	query.limit(size);
+        query.descending("cid");
         
         console.log("[cheng-chart.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
           success: function (results) {
+            /*
             that.setData({
               //loading: true
             });
-
-            console.log("[cheng-chart.js]查询成功，结果为: " + results.length + " 条数据");
-            for (var i = 0; i < results.length; i++) 
-            {
-
+           */
+            console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
+            for (var i = 0; i < results.length; i++) {
+              var url = results[i].get("url");
               var title = results[i].get("title");
               var content = results[i].get("content");
               var index = results[i].get("index");
               var createdAt = results[i].createdAt;
               lastid = results[i].get("cid");
+	      console.log("[cheng-chart.js]构建 ListView Item JSON 对象：" + title);
               var jsonA;
               jsonA = {
                 "title": title || '',
@@ -258,20 +283,18 @@ function getData(that) {
               molist.push(jsonA);
               
             }
-
-            
-            console.log("[cheng-chart.js]构建 ListView Item JSON 对象");
             that.setData({
-              count:lastid,
+              count: lastid,
+              loadingData:false,
               moodList: that.data.moodList.concat(molist)
               // loading: true
             })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
-            // that.setData({
-            //   loading: true
-            // })
+             that.setData({
+               loadingData: false
+             })
             console.log(error)
           }
         });
@@ -280,6 +303,9 @@ function getData(that) {
 
     },
     fail: function (error) {
+      that.setData({
+        loadingData: false
+      })
       console.log("失败")
     }
   })

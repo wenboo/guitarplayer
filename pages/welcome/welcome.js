@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    
+    forwardPage:false       // 已经点击了跳转了
   },
 
 
@@ -17,38 +17,50 @@ Page({
    */
   clickButtonGuitarChart: function () {
     console.log("[cheng-welcome.js]点击了 GuitarChart");
-    wx.navigateTo({
-      url: '../chart/chart',
-      success: function (res) {
-        // success  
-      },
-      fail: function () {
-        // fail  
-      },
-      complete: function () {
-        // complete  
-      }
-    }) 
+    if(!this.data.forwardPage)
+    {
+      this.setData({
+        forwardPage: true
+      })
+
+      wx.navigateTo({
+        url: '../chart/chart',
+        success: function (res) {
+          // success  
+        },
+        fail: function () {
+          // fail  
+        },
+        complete: function () {
+          // complete  
+        }
+      })
+    } 
   },
 
   /**
    * 进入 “吉他视频” 模块
    */
   clickButtonGuitarVideo: function () {
-    // 打印所有关于点击对象的信息
-    // console.log("hello world");
-    wx.navigateTo({
-      url: '../video/video',
-      success: function (res) {
-        // success  
-      },
-      fail: function () {
-        // fail  
-      },
-      complete: function () {
-        // complete  
-      }
-    })
+    if (!this.data.forwardPage) 
+    {
+      this.setData({
+        forwardPage: true
+      })
+  
+      wx.navigateTo({
+        url: '../video/video',
+        success: function (res) {
+          // success  
+        },
+        fail: function () {
+          // fail  
+        },
+        complete: function () {
+          // complete  
+        }
+      })
+    }
   },
 
   /**
@@ -56,34 +68,38 @@ Page({
    */
   onLoad: function (options) {
     that = this;
+    console.log("[cheng-welcome.js]onLoad");
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    console.log("[cheng-welcome.js]onReady");
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    console.log("[cheng-welcome.js]onShow");
+    this.setData({
+      forwardPage: false
+    })
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+    
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+    console.log("[cheng-welcome.js]onUnload");
   },
 
   /**
