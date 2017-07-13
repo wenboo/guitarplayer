@@ -4,7 +4,8 @@
     "pages/chart/chart",
     "pages/chartSearch/chartSearch",
     "pages/video/video",
-    "pages/videoSearch/videoSearch"
+    "pages/videoSearch/videoSearch",
+    "pages/feedback/feedback"
   ],
   "window": {
     "backgroundTextStyle": "light",

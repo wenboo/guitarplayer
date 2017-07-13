@@ -17,7 +17,7 @@
   </view> 
 
   <view class="welcome_info">
-        <image class="img" src="/images/welcome.png"></image> 
+        <image class="img" src="/images/welcome.png" bindtap="clickFeedback"></image> 
         <text class="text">趣玩吉他</text> 
   </view> 
 

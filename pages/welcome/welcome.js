@@ -64,6 +64,30 @@ Page({
   },
 
   /**
+     * 进入 “反馈” 模块
+     */
+  clickFeedback: function () {
+
+    if (!this.data.forwardPage) {
+      this.setData({
+        forwardPage: true
+      })
+
+      wx.navigateTo({
+        url: '../feedback/feedback',
+        success: function (res) {
+          // success  
+        },
+        fail: function () {
+          // fail  
+        },
+        complete: function () {
+          // complete  
+        }
+      })
+    }
+  },
+  /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {

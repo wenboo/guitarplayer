@@ -91,17 +91,17 @@ Page({
   /**
   * button点击事件监听
   */
-  clickButton: function () {
+  clickButton: function (e) {
 
     // 获取点击了条目的 index
-    var index = this.data.moodList[0].index;
-    console.log("[cheng-chart.js]点击了index为：" + index + " 的条目");
+    var cid = this.data.moodList[e.currentTarget.dataset.index].cid; //this.data.moodList[0].index;
+    console.log("[cheng-chart.js]点击了index为：" + cid + " 的条目");
     // 根据 index 发起 GuitarChartFile 的查询
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
     var query = new Bmob.Query(GuitarChartFile);
     // 条件查询
-    query.equalTo("index", index);
-    query.descending("createdAt");
+    query.equalTo("cid", cid);
+    query.ascending("seq");      // 按照吉他谱的升序排列
     // 查询所有数据
     query.find({
       success: function (results) {
@@ -123,11 +123,7 @@ Page({
         wx.previewImage({
           // 不填写默认 urls 第一张
           current: '',
-          urls: [
-            'http://img.souutu.com/2016/0511/20160511055648316.jpg',
-            'http://img.souutu.com/2016/0511/20160511055650751.jpg',
-            'http://img.souutu.com/2016/0511/20160511054928658.jpg'
-          ],
+          urls: imgUrls,
           //这根本就不走
           success: function (res) {
             console.log(res);
@@ -253,7 +249,7 @@ function getData(that) {
         // 条件查询
         query.equalTo("delete", "0");
         query.lessThan("cid",that.data.count);
-	query.limit(size);
+	      query.limit(size);
         query.descending("cid");
         
         console.log("[cheng-chart.js]开始根据条件查询...");
@@ -270,7 +266,7 @@ function getData(that) {
               var url = results[i].get("url");
               var title = results[i].get("title");
               var content = results[i].get("content");
-              var index = results[i].get("index");
+              var cid = results[i].get("cid");
               var createdAt = results[i].createdAt;
               lastid = results[i].get("cid");
 	      console.log("[cheng-chart.js]构建 ListView Item JSON 对象：" + title);
@@ -278,7 +274,7 @@ function getData(that) {
               jsonA = {
                 "title": title || '',
                 "content": content || '',
-                "index": index || ''
+                "cid": cid || ''
               }
               molist.push(jsonA);
               

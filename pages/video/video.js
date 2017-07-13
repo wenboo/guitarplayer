@@ -12,7 +12,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    loadingData:false,
+    loadingData: false,
     moodList: [],
     pageSize: size,          // 每次加载多少条
     limit: size,             // 跟上面要一致
@@ -30,10 +30,10 @@ Page({
     that = this;
 
     wx.getSystemInfo({
-      success: function(res) {
+      success: function (res) {
         var win = res.windowWidth;
         that.setData({
-          w:win
+          w: win
         })
       },
     })
@@ -42,7 +42,7 @@ Page({
     that.setData({
       loadingData: true
     })
-    
+
     console.log("[cheng-chart.js]设置了全局加载标记 -->" + that.data.loadingData);
     var GuitarVideo = Bmob.Object.extend("GuitarVideo");
     var query = new Bmob.Query(GuitarVideo);
@@ -58,7 +58,7 @@ Page({
       }
     });
 
-},
+  },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -120,8 +120,7 @@ Page({
     var that = this;
     // 如果是最后一页则不执行下面代码
     //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-    if(that.data.count <= 0)
-    {
+    if (that.data.count <= 0) {
       console.log("[cheng-video.js]最后一页 stop");
       common.showModal("已经是最后一页");
       return false;
@@ -137,12 +136,11 @@ Page({
 
     // this.onShow()
     // 如果没有在加载数据过程中，下拉加载才有效，避免多次加载
-    if(!that.data.loadingData)
-    {
+    if (!that.data.loadingData) {
       console.log("[cheng-video.js]loadingData 为 false，开始继续加载数据 ...");
       getData(that);
     }
-    
+
     console.log("[cheng-video.js]已经在加载数据了，等等吧 ...");
   },
 
@@ -172,8 +170,7 @@ function getData(that) {
 
   //如果是最后一页则不执行下面代码
   //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-  if(that.data.count <= 0)
-  {
+  if (that.data.count <= 0) {
     console.log("stop");
     common.showModal("已经是最后一页");
     return false;
@@ -231,20 +228,20 @@ function getData(that) {
                 "poster": poster || ''
               }
               molist.push(jsonA);
-              
+
             }
             that.setData({
               count: lastid,
-              loadingData:false,
+              loadingData: false,
               moodList: that.data.moodList.concat(molist)
               // loading: true
             })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
-             that.setData({
-               loadingData: false
-             })
+            that.setData({
+              loadingData: false
+            })
             console.log(error)
           }
         });
