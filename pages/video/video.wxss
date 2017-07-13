@@ -2,6 +2,11 @@ page {
   background: #ebebeb;
 }
 
+.video_page{
+  display: flex; 
+  flex-direction: column; 
+}
+
 .input{
   text-align: center;
   font-size: 15px;

@@ -29,6 +29,15 @@ Page({
 
     that = this;
 
+    wx.getSystemInfo({
+      success: function(res) {
+        var win = res.windowWidth;
+        that.setData({
+          w:win
+        })
+      },
+    })
+
     // onLoad 时候会请求数据条目总数，防止在此过程中下拉至底部
     that.setData({
       loadingData: true

@@ -1,4 +1,4 @@
 <template name="listTemp">
-    <video poster="{{poster}}" style="width:100%; height:180px" src="{{url}}"></video>
+    <video poster="{{poster}}" style="width:100%; height=180px" object-fit="fill" src="{{url}}"></video>
     <view class="listVideoContent"><text>{{title}}</text></view>
 </template>
