@@ -8,7 +8,7 @@
 </view>
 </form>
 
-<view class="content_detail" wx:for-items="{{moodList}}" wx:key="index" bindtap="clickButton">
+<view class="content_detail" wx:for-items="{{moodList}}" wx:key="cid" bindtap="clickButton" data-index="{{index}}">
   <template is="listTemp" data="{{listTitle:item.title,listContent:item.content}}" />
 </view>
 

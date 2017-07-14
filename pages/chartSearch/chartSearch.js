@@ -16,7 +16,7 @@ Page({
     pageSize: size,          // 每次加载多少条
     limit: size,             // 跟上面要一致
     //loading: false,
-    count: 0,
+    globalCid: 0,
     isInit:false,
   },
 
@@ -24,10 +24,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // that = this;
-    that.setData({
-      //loading: true
-    })
+
   },
 
   /**
@@ -42,7 +39,6 @@ Page({
    */
   onShow: function () {
 
-   
   },
 
 
@@ -50,59 +46,54 @@ Page({
    * 搜索提交
    */
   lostFocus: function (e) {
+
+    var that = this;
+
     this.setData({
       inputValue: e.detail.value
     })
-    console.log("[cheng-chartSearch]提交搜索 "+ this.data.inputValue);
+    
     // 开始查询
     if (this.data.inputValue != '')
     {
-      startToSearch(this.data.inputValue);
+      console.log("[cheng-chartSearch]准备搜索关键词：" + this.data.inputValue);
+      startToSearch(this.data.inputValue,that);
     }
-    
+
+    console.log("[cheng-chartSearch]内容为空，不搜索：" + this.data.inputValue);
   },
 
   /**
    * button点击事件监听
    */
-  clickButton: function () {
-
+  clickButton: function (e) {
     // 获取点击了条目的 index
-    var index = this.data.moodList[0].index;
-    console.log("[cheng-chartSearch.js]点击了index为："+index+" 的条目");
+    var cid = this.data.moodList[e.currentTarget.dataset.index].cid; //this.data.moodList[0].index;
+    console.log("[cheng-chart.js]点击了index为：" + cid + " 的条目");
     // 根据 index 发起 GuitarChartFile 的查询
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
     var query = new Bmob.Query(GuitarChartFile);
     // 条件查询
-    query.equalTo("index", index);
-    query.descending("createdAt");                   
+    query.equalTo("cid", cid);
+    query.ascending("seq");      // 按照吉他谱的升序排列
     // 查询所有数据
     query.find({
       success: function (results) {
-        that.setData({
-          //loading: true
-        });
-        
-        console.log("[cheng-chartSearch.js]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
+        console.log("[cheng-chart.js]查询吉他图片条目成功，结果为: " + results.length + " 条数据");
         var imgUrls = new Array();
         var url;
 
-        for (var i = 0; i < results.length; i++) 
-        {
+        for (var i = 0; i < results.length; i++) {
           url = results[i].get("url");
           imgUrls.push(url);
         }
-        console.log("[cheng-chartSearch.js]吉他谱图片地址数组构建 OK");
+        console.log("[cheng-chart.js]吉他谱图片地址数组构建 OK");
 
         // 微信预览开始
         wx.previewImage({
           // 不填写默认 urls 第一张
-          current: '',  
-          urls: [
-            'http://img.souutu.com/2016/0511/20160511055648316.jpg',
-            'http://img.souutu.com/2016/0511/20160511055650751.jpg',
-            'http://img.souutu.com/2016/0511/20160511054928658.jpg'
-          ],
+          current: '',
+          urls: imgUrls,
           //这根本就不走
           success: function (res) {
             console.log(res);
@@ -121,7 +112,6 @@ Page({
         console.log(error)
       }
     });
-
   },
 
   /**
@@ -144,23 +134,7 @@ Page({
    */
   onReachBottom: function () {
      var that = this;
-     
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
-      common.showModal("已经是最后一页");
-      return false;
-    }
-    
-    var limit = that.data.limit
-    console.log("上拉加载更多....[limit]" + that.data.limit)
-    that.setData({
-      limit: limit + that.data.pageSize,
-
-    });
-    
-    // this.onShow()
-    // startToSearcg()??? TBD
+     bottomLoopSearch(that.data.inputValue, that);
   },
 
   /**
@@ -178,87 +152,60 @@ Page({
 
 
 
-function startToSearch(searchContent) {
-
-  //如果是最后一页则不执行下面代码
-  if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-    console.log("stop")
-    common.showModal("已经是最后一页")
-    return false;
-  }
-
-  that.setData({
-    //loading: false
-  });
+function startToSearch(searchContent,that) {
 
   var molist = new Array();
+  var lastid = 0;
 
   wx.getStorage({
     key: 'user_id',
     success: function (ress) {
       if (ress.data) {
-        
         // 复合查询：没有删除 && titile 为搜索关键字
         var GuitarChart = Bmob.Object.extend("GuitarChart");
         var query1 = new Bmob.Query(GuitarChart);
         // 作者
         query1.equalTo("delete", "0");
         query1.equalTo("title", searchContent);
-        //query1.descending("createdAt");                
+              
         // 吉他谱名字
         var query2 = new Bmob.Query(GuitarChart);
         query2.equalTo("delete", "0");
         query2.equalTo("content", searchContent);
-        //query2.descending("createdAt");   
 
         var query = Bmob.Query.or(query1,query2);
-        query.descending("createdAt");
+        query.descending("cid");
         
-        if (that.data.limit == that.data.pageSize) {
-          query.limit(that.data.limit);
-        }
-        if (that.data.limit > that.data.pageSize) {
-          query.limit(that.data.limit)
-        }
-        
+        query.limit(size);
+
         console.log("[cheng-chartSearch.js]开始根据条件查询...");
+
         // 查询所有数据
         query.find({
           success: function (results) {
-            that.setData({
-              // loading: true
-	      // 找到匹配的条目
-	      count:results.length
-            });
-
+           
             console.log("[cheng-chartSearch.js]查询成功，结果为: " + results.length +" 条数据");
             for (var i = 0; i < results.length; i++) 
-	    {
+	          {
        
-              var title = results[i].get("title");
-              var content = results[i].get("content");
-              var index = results[i].get("index");
-              var createdAt = results[i].createdAt;
-            
-              
-              var jsonA;
-
-              jsonA = {
-                "title": title || '',
-                "content": content || '',
-                "index": index || ''
+                var title = results[i].get("title");
+                var content = results[i].get("content");
+                var cid = results[i].get("cid");
+                lastid = cid;
+                console.log("[cheng-chart.js]构建 ListView Item JSON 对象：" + title);
+                var jsonA;
+                jsonA = {
+                  "title": title || '',
+                  "content": content || '',
+                  "cid": cid || ''
+                }
+                molist.push(jsonA);
             }
-	      that.data.count = results[i].get("id");
-              molist.push(jsonA)
 
-              console.log("[cheng-chartSearch.js]构建 ListView Item JSON 对象");
-
-              that.setData({
-                
-                moodList: that.data.moodList.concat(molist),
-                // loading: true
-              })
-            }
+            that.setData({
+              moodList: that.data.moodList.concat(molist),
+              globalCid: lastid
+            })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
@@ -268,9 +215,84 @@ function startToSearch(searchContent) {
             console.log(error)
           }
         });
-
       }
+    },
+    fail: function (error) {
+      console.log("失败")
+    }
+  })
+}
 
+
+function bottomLoopSearch(searchContent, that) {
+
+  var molist = new Array();
+  var lastid = 0;
+
+  wx.getStorage({
+    key: 'user_id',
+    success: function (ress) {
+      if (ress.data) {
+        // 复合查询：没有删除 && titile 为搜索关键字
+        var GuitarChart = Bmob.Object.extend("GuitarChart");
+        var query1 = new Bmob.Query(GuitarChart);
+        // 作者
+        query1.equalTo("delete", "0");
+        query1.equalTo("title", searchContent);
+
+        // 吉他谱名字
+        var query2 = new Bmob.Query(GuitarChart);
+        query2.equalTo("delete", "0");
+        query2.equalTo("content", searchContent);
+
+        var query = Bmob.Query.or(query1, query2);
+        query.descending("cid");
+        query.lessThan("cid", that.data.globalCid);
+        query.limit(size);
+
+        console.log("[cheng-chartSearch.js]开始根据条件查询...");
+
+        // 查询所有数据
+        query.find({
+          success: function (results) {
+
+            if(results.length <= 0)
+            {
+              common.showModal("已经是最后一页");
+              return false;
+            }
+
+            console.log("[cheng-chartSearch.js]查询成功，结果为: " + results.length + " 条数据");
+            for (var i = 0; i < results.length; i++) 
+            {
+
+              var title = results[i].get("title");
+              var content = results[i].get("content");
+              var cid = results[i].get("cid");
+              lastid = cid;
+              console.log("[cheng-chart.js]构建 ListView Item JSON 对象：" + title);
+              var jsonA;
+              jsonA = {
+                "title": title || '',
+                "content": content || '',
+                "cid": cid || ''
+              }
+              molist.push(jsonA);
+            }
+            that.setData({
+              moodList: that.data.moodList.concat(molist),
+              globalCid: cid
+            })
+          },
+          error: function (error) {
+            common.dataLoading(error, "loading");
+            // that.setData({
+            //   loading: true
+            // })
+            console.log(error)
+          }
+        });
+      }
     },
     fail: function (error) {
       console.log("失败")
