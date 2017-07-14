@@ -9,14 +9,14 @@ page {
 }
 
 
-.input{
+.feedback{
   /*text-align: center;*/
   font-size: 15px;
   padding-top: 5px;
   padding-bottom: 5px;
 }
 
-.input_view{
+.feedback_view{
   background: #ffffff;
   /*边界：大小1px, 为固体，为红色*/
   /*border:  1px solid #d81e06;*/
@@ -30,14 +30,21 @@ page {
 }
 
 
+
 .button_view{
-  background: #ffffff;
+  background: #ebebeb;
   /*边界：大小1px, 为固体，为红色*/
   border:  1px solid #d81e06;
   /*边界角的弧度*/
   border-radius: 5px;
-  height: 40px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 15px;
+  
+}
+
+
+.button_text {
+  font-size: 18px;
+  color: #d81e06;
 }

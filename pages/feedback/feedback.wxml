@@ -1,8 +1,11 @@
 <!--feedback.wxml-->
 
-<view class="input_view">
-<textarea class="input" placeholder-style="color: gray" maxlength="200" placeholder="您的反馈有助于我们更好的改善"/>
+<form bindsubmit="formBindsubmit">
+
+<view class="feedback_view">
+<textarea name="feedback" class="feedback" placeholder-style="color: gray" maxlength="200" placeholder="您的反馈有助于我们更好的改善"/>
 </view>
+<button class="button_view" formType="submit"><text class="button_text">提交</text></button>
 
+</form>
 
-<button class="button_view" type="defaule" bindtap="clickButton" text-align="center">提交</button>
