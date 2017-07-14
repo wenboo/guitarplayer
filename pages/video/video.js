@@ -150,9 +150,9 @@ Page({
   onShareAppMessage: function () {
     // 转发
     return {
-      title: '心邮',
-      desc: '倾诉烦恼，邮寄心情，分享快乐',
-      path: '/pages/index/index'
+      title: '趣玩吉他',
+      desc: '',
+      path: '/pages/video/video'
     }
   },
 })
