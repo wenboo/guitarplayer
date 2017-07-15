@@ -28,7 +28,7 @@ Page({
     console.log("[cheng-chart.js]----------onLoad----------");
 
     that = this;
-
+    /*
     wx.getSystemInfo({
       success: function (res) {
         var win = res.windowWidth;
@@ -37,6 +37,7 @@ Page({
         })
       },
     })
+    */
 
     // onLoad 时候会请求数据条目总数，防止在此过程中下拉至底部
     that.setData({
@@ -51,7 +52,7 @@ Page({
     query.count({
       success: function (results) {
         that.setData({
-          count: results
+          count: results+1          // 解决少一条的问题  
         })
 
         getData(that);

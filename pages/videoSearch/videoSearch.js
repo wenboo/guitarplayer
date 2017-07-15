@@ -50,7 +50,18 @@ Page({
   onShow: function () {
     
   },
+  /**
+   * 搜索
+   */
+  onFocus: function (e) {
 
+    var that = this;
+
+    this.setData({
+      moodList: []
+    })
+  },
+  
 /**
   * 搜索提交
   */

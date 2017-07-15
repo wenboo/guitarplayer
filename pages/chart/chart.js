@@ -42,7 +42,7 @@ Page({
     query.count({
       success: function (results) {
         that.setData({
-          count: results
+          count: results+1        // 解决少1条问题
         })
 
         getData(that);
