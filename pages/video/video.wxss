@@ -2,6 +2,11 @@ page {
   background: #ebebeb;
 }
 
+.content{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
 .video_page{
   display: flex; 
   flex-direction: column; 

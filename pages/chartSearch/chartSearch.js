@@ -3,7 +3,7 @@ var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-var size = 6;
+var size = 12;
 
 Page({
 
@@ -81,6 +81,23 @@ Page({
   clickButton: function (e) {
     // 获取点击了条目的 index
     var cid = this.data.moodList[e.currentTarget.dataset.index].cid; //this.data.moodList[0].index;
+    var objId = this.data.moodList[e.currentTarget.dataset.index].objId;
+
+    // 点击率记录到数据库
+    var GuitarChart = Bmob.Object.extend("GuitarChart");
+    var queryHit = new Bmob.Query(GuitarChart);
+    // 这个 id 是要修改条目的 id，你在生成这个存储并成功时可以获取到，请看前面的文档
+    queryHit.get(objId, {
+      success: function (result) {
+        // 回调中可以取得这个 diary 对象的一个实例，然后就可以修改它了
+        result.increment("hit");
+        result.save();
+        // The object was retrieved successfully.
+      },
+      error: function (object, error) {
+      }
+    });
+    
     console.log("[cheng-chart.js]点击了index为：" + cid + " 的条目");
     // 根据 index 发起 GuitarChartFile 的查询
     var GuitarChartFile = Bmob.Object.extend("GuitarChartFile");
@@ -277,7 +294,7 @@ function bottomLoopSearch(searchContent, that) {
             console.log("[cheng-chartSearch.js]查询成功，结果为: " + results.length + " 条数据");
             for (var i = 0; i < results.length; i++) 
             {
-
+              var objId = results[i].id;
               var title = results[i].get("title");
               var content = results[i].get("content");
               var cid = results[i].get("cid");
@@ -285,6 +302,7 @@ function bottomLoopSearch(searchContent, that) {
               console.log("[cheng-chart.js]构建 ListView Item JSON 对象：" + title);
               var jsonA;
               jsonA = {
+                "objId": objId || '',
                 "title": title || '',
                 "content": content || '',
                 "cid": cid || ''

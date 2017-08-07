@@ -1,22 +1,10 @@
-<!-- <loading hidden="{{loading}}">加载中...</loading> -->
-
-<import src="../template/list_video.wxml" />
-
-
-
 <view class="input_view">
   <input class="input" bindfocus="videoSearch" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索"/>
 </view>
 
-
-
-<view class="content_detail" wx:for-items="{{moodList}}" wx:key="url">
-  <template is="listTemp" data="{{url:item.url,title:item.title,poster:item.poster}}" />
+<view class="content_detail" wx:for-items="{{moodList}}" wx:key="url" data-index="{{index}}" bindtap="onVideoImageClick">
+    <image style="display:{{item.videoImage}}; width:100%; height=180px" mode="scaleToFill" src="{{item.image}}"></image>
+    <video id="{{item.videoId}}" style="display:{{item.videoPlayHidden}}; width:100%; height=180px" object-fit="fill" src="{{item.url}}"></video>
+    <view class="listVideoContent"><text>{{item.title}}</text></view>
 </view>
-
-
-
-
-<!--view class="bord"></view-->
-<!--view class="returnTop"  wx:if="{{scrollTop.goTop_show}}" catchtap="goTopFun">
-</view-->
+ 

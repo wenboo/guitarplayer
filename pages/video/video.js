@@ -1,17 +1,16 @@
-// video.js
-
-//获取应用实例
+// 获取应用实例
 var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-var size = 4;
+var size = 5;
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
+    videoPlayHidden: 'none',
+    videoImage: 'block',
     loadingData: false,
     moodList: [],
     pageSize: size,          // 每次加载多少条
@@ -39,8 +38,9 @@ Page({
     })
     */
 
-    // onLoad 时候会请求数据条目总数，防止在此过程中下拉至底部
     that.setData({
+      videoPlayHidden: 'none',
+      videoImage: 'block',
       loadingData: true
     })
 
@@ -77,6 +77,24 @@ Page({
     // getData(that);
   },
 
+  /**
+   * 用户点击了视频上的预览图片
+   */
+  onVideoImageClick:function(e){
+    that = this;
+    var videoId = that.data.moodList[e.currentTarget.dataset.index].videoId;
+    
+    that.data.moodList[e.currentTarget.dataset.index].videoPlayHidden = "block";
+    that.data.moodList[e.currentTarget.dataset.index].videoImage = "none";
+
+    that.setData({
+      moodList: that.data.moodList
+    })
+  
+    var videoContext = wx.createVideoContext(videoId);
+    videoContext.play();
+    console.log("[cheng-video.js] onVideoImageClick");
+  },
 
   /**
    * 点击搜索跳转至吉他谱搜索界面
@@ -178,7 +196,8 @@ function getData(that) {
   }
 
   var molist = new Array();
-  var lastid = 0;
+  var image;
+  var lastid;
 
   wx.getStorage({
     key: 'user_id',
@@ -218,15 +237,21 @@ function getData(that) {
               var title = results[i].get("title");
               var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
+              image = poster;
               lastid = results[i].get("vid");
+              var videoId = "videoId" + lastid.toString();
               console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + title);
 
               var jsonA;
 
               jsonA = {
+                "videoId": videoId || '',  // vid
                 "url": url || '',
                 "title": title || '',
-                "poster": poster || ''
+                "image": image || '',
+                "poster": poster || '',
+                "videoImage": "block" || '',
+                "videoPlayHidden": "none",
               }
               molist.push(jsonA);
 
