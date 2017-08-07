@@ -25,19 +25,7 @@ Page({
    */
   onLoad: function (options) {
     console.log("[cheng-chart.js]----------onLoad----------");
-
     that = this;
-    /*
-    wx.getSystemInfo({
-      success: function (res) {
-        var win = res.windowWidth;
-        that.setData({
-          w: win
-        })
-      },
-    })
-    */
-
     that.setData({
       videoPlayHidden: 'none',
       videoImage: 'block',
@@ -54,7 +42,6 @@ Page({
         that.setData({
           count: results+1          // 解决少一条的问题  
         })
-
         getData(that);
       }
     });
@@ -83,6 +70,22 @@ Page({
   onVideoImageClick:function(e){
     that = this;
     var videoId = that.data.moodList[e.currentTarget.dataset.index].videoId;
+    var objId = that.data.moodList[e.currentTarget.dataset.index].objId;
+
+    // 点击率记录到数据库
+    var GuitarVideo = Bmob.Object.extend("GuitarVideo");
+    var queryHit = new Bmob.Query(GuitarVideo);
+    // 这个 id 是要修改条目的 id
+    queryHit.get(objId, {
+      success: function (result) {
+        // 回调中可以取得这个 diary 对象的一个实例，然后就可以修改它了
+        result.increment("hit");
+        result.save();
+        // The object was retrieved successfully.
+      },
+      error: function (object, error) {
+      }
+    });
     
     that.data.moodList[e.currentTarget.dataset.index].videoPlayHidden = "block";
     that.data.moodList[e.currentTarget.dataset.index].videoImage = "none";
@@ -137,23 +140,14 @@ Page({
   onReachBottom: function () {
     console.log("[cheng-video.js]上拉加载更多 ...");
     var that = this;
+
     // 如果是最后一页则不执行下面代码
-    //if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
     if (that.data.count <= 0) {
       console.log("[cheng-video.js]最后一页 stop");
       common.showModal("已经是最后一页");
       return false;
     }
 
-    /*
-    var limit = that.data.limit 
-    console.log("上拉加载更多....[limit]" + that.data.limit)
-    that.setData({
-      limit: limit + that.data.pageSize,
-    });
-    */
-
-    // this.onShow()
     // 如果没有在加载数据过程中，下拉加载才有效，避免多次加载
     if (!that.data.loadingData) {
       console.log("[cheng-video.js]loadingData 为 false，开始继续加载数据 ...");
@@ -233,6 +227,7 @@ function getData(that) {
            */
             console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
             for (var i = 0; i < results.length; i++) {
+              var objId = results[i].id; //get("objectId");
               var url = results[i].get("url");
               var title = results[i].get("title");
               var poster = results[i].get("poster");
@@ -245,6 +240,7 @@ function getData(that) {
               var jsonA;
 
               jsonA = {
+                "objId": objId || '',
                 "videoId": videoId || '',  // vid
                 "url": url || '',
                 "title": title || '',

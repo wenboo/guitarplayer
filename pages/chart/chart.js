@@ -97,7 +97,7 @@ Page({
     // 点击率记录到数据库
     var GuitarChart = Bmob.Object.extend("GuitarChart");
     var queryHit = new Bmob.Query(GuitarChart);
-    // 这个 id 是要修改条目的 id，你在生成这个存储并成功时可以获取到，请看前面的文档
+    // 这个 id 是要修改条目的 id
     queryHit.get(objId, {
       success: function(result) {
       // 回调中可以取得这个 diary 对象的一个实例，然后就可以修改它了
