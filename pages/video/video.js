@@ -15,7 +15,6 @@ Page({
     moodList: [],
     pageSize: size,          // 每次加载多少条
     limit: size,             // 跟上面要一致
-    //loading: false,
     count: 0,
     isInit: false,
   },
@@ -200,16 +199,6 @@ function getData(that) {
         // clearInterval(myInterval)
         var GuitarVideo = Bmob.Object.extend("GuitarVideo");
         var query = new Bmob.Query(GuitarVideo);
-
-        /*
-        if (that.data.limit == that.data.pageSize) {
-          query.limit(that.data.limit);
-        }
-        if (that.data.limit > that.data.pageSize) {
-          query.limit(that.data.limit)
-        }
-        */
-
         // 条件查询
         query.equalTo("delete", "0");
         query.lessThan("vid", that.data.count);
@@ -220,11 +209,7 @@ function getData(that) {
         // 查询所有数据
         query.find({
           success: function (results) {
-            /*
-            that.setData({
-              //loading: true
-            });
-           */
+   
             console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
             for (var i = 0; i < results.length; i++) {
               var objId = results[i].id; //get("objectId");
@@ -250,7 +235,6 @@ function getData(that) {
                 "videoPlayHidden": "none",
               }
               molist.push(jsonA);
-
             }
             that.setData({
               count: lastid,

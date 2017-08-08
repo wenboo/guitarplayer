@@ -1,30 +1,24 @@
-// search.js
-
 //获取应用实例
 var common = require('../../utils/common.js')
 var app = getApp()
 var Bmob = require("../../utils/bmob.js");
 var that;
-//var videoContext;
-
+var size = 5;
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    inputValue: "",
+    videoPlayHidden: 'none',
+    videoImage: 'block',
+    loadingData: false,
     moodList: [],
-    pageSize: 3,          // 每次加载多少条
-    limit: 3,             // 跟上面要一致
+    pageSize: size,          // 每次加载多少条
+    limit: size,             // 跟上面要一致
     //loading: false,
-    windowHeight1: 0,
-    windowWidth1: 0,
     count: 0,
-    scrollTop: {
-      scroll_top1: 0,
-      goTop_show: false
-    }
+    isInit: false,
   },
 
   /**
@@ -66,22 +60,26 @@ Page({
   * 搜索提交
   */
   lostFocus: function (e) {
+	  
+	var that = this;
+	
     this.setData({
       inputValue: e.detail.value
     })
-    console.log("[cheng-chartSearch]提交搜索 " + this.data.inputValue);
-
+	
     // 开始查询
     if (this.data.inputValue != '')
     {
+	  console.log("[cheng-videoSearch]准备搜索关键词：" + this.data.inputValue);
       startToSearch(this.data.inputValue);
     }
     
+	console.log("[cheng-videoSearch]内容为空，不搜索：" + this.data.inputValue);
   },
  
-/**
- * 点击搜索跳转至吉他谱搜索界面
- */
+ /**
+  * 点击搜索跳转至吉他谱搜索界面
+  */
 
   videoSearch: function (e) {
     console.log("[cheng-video.js] 开始搜索吉他视频");
@@ -115,153 +113,167 @@ Page({
   },
 
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    wx.stopPullDownRefresh();
-    var limit = that.data.limit;
-
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
-      common.showModal("已经是最后一页");
-      return false;
-    }
-
-    console.log("下拉刷新....." + that.data.limit);
-
-    that.setData({
-      limit: that.data.pageSize,
-    })
-
-    that.onShow();
-  },
-
-  /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    var limit = that.data.limit;
-    console.log("上拉加载更多...." + that.data.limit);
+	
+	var that = this;
+    
+	// 如果是最后一页则不执行下面代码
+  if (that.data.count <= 0) {
+    console.log("[cheng-video.js]最后一页 stop");
+    common.showModal("已经是最后一页");
+    return false;
+  }
 
-    //如果是最后一页则不执行下面代码
-    if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-      console.log("stop");
-      common.showModal("已经是最后一页");
-      return false;
-    }
+  // 如果没有在加载数据过程中，下拉加载才有效，避免多次加载
+  if (!that.data.loadingData) {
+    console.log("[cheng-video.js]loadingData 为 false，开始继续加载数据 ...");
+    bottomLoopSearch(that.data.inputValue, that);
+  }
 
-    that.setData({
-      limit: limit + that.data.pageSize,
-    });
-
-    this.onShow();
-  },
-
-  scrollTopFun: function (e) {
-    if (e.detail.scrollTop > 300) {
-      this.setData({
-        'scrollTop.goTop_show': true
-      });
-    } else {
-      this.setData({
-        'scrollTop.goTop_show': false
-      });
-    }
+  console.log("[cheng-video.js]已经在加载数据了，等等吧 ...");
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    // 转发?
+    // 转发
     return {
       title: '趣玩吉他',
       desc: '',
       path: '/pages/video/video'
     }
   },
+
+  /**
+   * 用户点击了视频上的预览图片
+   */
+  onVideoImageClick: function (e) {
+    that = this;
+    var videoId = that.data.moodList[e.currentTarget.dataset.index].videoId;
+    var objId = that.data.moodList[e.currentTarget.dataset.index].objId;
+
+    // 点击率记录到数据库
+    var GuitarVideo = Bmob.Object.extend("GuitarVideo");
+    var queryHit = new Bmob.Query(GuitarVideo);
+    // 这个 id 是要修改条目的 id
+    queryHit.get(objId, {
+      success: function (result) {
+        // 回调中可以取得这个 diary 对象的一个实例，然后就可以修改它了
+        result.increment("hit");
+        result.save();
+        // The object was retrieved successfully.
+      },
+      error: function (object, error) {
+      }
+    });
+
+    that.data.moodList[e.currentTarget.dataset.index].videoPlayHidden = "block";
+    that.data.moodList[e.currentTarget.dataset.index].videoImage = "none";
+
+    that.setData({
+      moodList: that.data.moodList
+    })
+
+    var videoContext = wx.createVideoContext(videoId);
+    videoContext.play();
+    console.log("[cheng-video.js] onVideoImageClick");
+  },
 })
 
+function bottomLoopSearch(searchContent,that) {
 
-function getReturn() {
+  // 开始检索和加载数据
+  that.setData({
+    loadingData: true
+  });
 
   //如果是最后一页则不执行下面代码
-  if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
+  if (that.data.count <= 0) {
     console.log("stop");
     common.showModal("已经是最后一页");
     return false;
   }
 
-  that.setData({
-    //loading: false
-  });
-
   var molist = new Array();
+  var image;
+  var lastid;
 
   wx.getStorage({
     key: 'user_id',
     success: function (ress) {
       if (ress.data) {
-        // clearInterval(myInterval)
         var GuitarVideo = Bmob.Object.extend("GuitarVideo");
         var query = new Bmob.Query(GuitarVideo);
 
-        if (that.data.limit == that.data.pageSize) {
-          query.limit(that.data.limit);
-        }
-        if (that.data.limit > that.data.pageSize) {
-          query.limit(that.data.limit)
-        }
-        
         // 条件查询
         query.equalTo("delete", "0");
-        query.descending("createdAt");
+		    query.equalTo("author", searchContent);
+        query.lessThan("vid", that.data.count);
+        query.descending("vid");
+		
+		    query.limit(size);
 
-        console.log("[cheng-video.js]开始根据条件查询...");
-        // 查询所有数据
+        console.log("[cheng-videoSearch.js]开始根据条件查询...");
+        
+		// 查询所有数据
         query.find({
           success: function (results) {
-            that.setData({
-              //loading: true
-            });
 
-            console.log("[cheng-video.js]查询成功，结果为: " + results.length +" 条数据");
-            for (var i = 0; i < results.length; i++) {
-       
+            console.log("[cheng-videoSearch.js]查询成功，结果为: " + results.length + " 条数据");
+
+            if (results.length <= 0) {
+              console.log("[cheng-video.js]最后一页 stop");
+              common.showModal("已经是最后一页");
+              that.setData({
+                loadingData: false
+              })
+              return false;
+            }
+			
+            for (var i = 0; i < results.length; i++) 
+			{
+              var objId = results[i].id; //get("objectId");
               var url = results[i].get("url");
               var title = results[i].get("title");
               var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
-            
-              
+              image = poster;
+              lastid = results[i].get("vid");
+              var videoId = "videoId" + lastid.toString();
+              console.log("[cheng-videoSearch.js]构建 ListView Item JSON 对象：" + title);
+
               var jsonA;
 
               jsonA = {
+                "objId": objId || '',
+                "videoId": videoId || '',  // vid
                 "url": url || '',
                 "title": title || '',
-                "poster": poster || ''
+                "image": image || '',
+                "poster": poster || '',
+                "videoImage": "block" || '',
+                "videoPlayHidden": "none",
               }
-
-              molist.push(jsonA)
-       
-              console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
-
-              var videoContext = wx.createVideoContext('myVideo');
-              videoContext.seek(5);
-
-              that.setData({
-                moodList: molist,
-                // loading: true
-              })
-            }
+              molist.push(jsonA);            
+	        }
+			
+			that.setData({
+				count: lastid,
+              	loadingData: false,
+              	moodList: that.data.moodList.concat(molist)
+              	// loading: true
+            })
           },
+		  
           error: function (error) {
             common.dataLoading(error, "loading");
-            // that.setData({
-            //   loading: true
-            // })
-            console.log(error)
+            that.setData({
+              loadingData: false
+            })
+            console.log(error);
           }
         });
 
@@ -269,26 +281,26 @@ function getReturn() {
 
     },
     fail: function (error) {
-      console.log("失败")
+       
+	   that.setData(
+       {
+        loadingData: false 
+	   });
+	
+	   console.log("失败");
     }
   })
 }
 
-
 function startToSearch(searchContent) {
-
-  //如果是最后一页则不执行下面代码
-  if (that.data.limit > that.data.pageSize && that.data.limit - that.data.pageSize >= that.data.count) {
-    console.log("stop")
-    common.showModal("已经是最后一页")
-    return false;
-  }
 
   that.setData({
     //loading: false
   });
 
   var molist = new Array();
+  var image;
+  var lastid;
 
   wx.getStorage({
     key: 'user_id',
@@ -298,16 +310,12 @@ function startToSearch(searchContent) {
         // 复合查询：没有删除 && titile 为搜索关键字
         var GuitarChart = Bmob.Object.extend("GuitarVideo");
         var query = new Bmob.Query(GuitarChart);
+		query.equalTo("delete", "0");
         query.equalTo("author", searchContent);       // 按作者查找，模糊查询要收费，太 bug 了
-        query.descending("createdAt");                // 按日期降序排列
+        query.descending("vid");                	  // 按日期降序排列
+		
+		query.limit(size);
       
-        if (that.data.limit == that.data.pageSize) {
-          query.limit(that.data.limit);
-        }
-        if (that.data.limit > that.data.pageSize) {
-          query.limit(that.data.limit)
-        }
-
         console.log("[cheng-chartSearch.js]开始根据条件查询...");
         // 查询所有数据
         query.find({
@@ -316,42 +324,48 @@ function startToSearch(searchContent) {
               //loading: true
             });
 
-            console.log("[cheng-video.js]查询成功，结果为: " + results.length + " 条数据");
-            for (var i = 0; i < results.length; i++) {
-
+            console.log("[cheng-videoSearch.js]查询成功，结果为: " + results.length + " 条数据");
+            
+			for (var i = 0; i < results.length; i++) 
+			{
+              var objId = results[i].id; //get("objectId");
               var url = results[i].get("url");
               var title = results[i].get("title");
               var poster = results[i].get("poster");
               var createdAt = results[i].createdAt;
-
+              image = poster;
+              lastid = results[i].get("vid");
+              var videoId = "videoId" + lastid.toString();
+              console.log("[cheng-videoSearch.js]构建 ListView Item JSON 对象：" + title);
 
               var jsonA;
 
               jsonA = {
+                "objId": objId || '',
+                "videoId": videoId || '',  // vid
                 "url": url || '',
                 "title": title || '',
-                "poster": poster || ''
+                "image": image || '',
+                "poster": poster || '',
+                "videoImage": "block" || '',
+                "videoPlayHidden": "none",
               }
-
-              molist.push(jsonA)
-
-              console.log("[cheng-video.js]构建 ListView Item JSON 对象：" + jsonA);
-
-              var videoContext = wx.createVideoContext('myVideo');
-              videoContext.seek(5);
-
-              that.setData({
-                moodList: molist,
-                // loading: true
-              })
-            }
+              molist.push(jsonA);            
+	        }
+			
+			that.setData({
+				count: lastid,
+              	loadingData: false,
+              	moodList: that.data.moodList.concat(molist)
+              	// loading: true
+            })
           },
           error: function (error) {
             common.dataLoading(error, "loading");
-            // that.setData({
-            //   loading: true
-            // })
-            console.log(error)
+            that.setData({
+              loadingData: false
+            })
+            console.log(error);
           }
         });
 
@@ -359,7 +373,12 @@ function startToSearch(searchContent) {
 
     },
     fail: function (error) {
-      console.log("失败")
+      that.setData(
+       {
+        loadingData: false 
+	   });
+	
+	   console.log("失败");
     }
   })
 }
