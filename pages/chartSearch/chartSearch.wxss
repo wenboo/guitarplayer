@@ -19,6 +19,11 @@ page {
   margin-top: 15px;
 }
 
+.search_no_results{
+ text-align: center;
+ margin-top: 200px;
+}
+
 navigator {
   background: #fff;
   margin-bottom: 30rpx;
@@ -62,6 +67,7 @@ navigator {
   z-index: 2;
   background: #000;
 }
+
 .returnTop{
   width:100rpx;
   height: 100rpx;
@@ -74,4 +80,10 @@ navigator {
   border-bottom: 0;
   border-top: 0;
 }
+
 .bord{height:1px;width:100%;position:fixed;bottom: 0;left:0;background:#ccc;}
+
+.text{
+  font-size: 15px;
+  color: #cdcdcd;
+}

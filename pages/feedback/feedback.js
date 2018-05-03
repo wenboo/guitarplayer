@@ -8,14 +8,21 @@ Page({
    * 页面的初始数据
    */
   data: {
-  feedback:''
+  feedback:'',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    console.log("接收到的参数是str=" + options.str);
+    if(options.str != null)
+    {
+      console.log("hi");
+      this.setData({
+        feedbackText:options.str
+      })
+    }
   },
 
   /**
@@ -67,11 +74,8 @@ Page({
   
   },
 
-
   formBindsubmit: function (e) {
-    
     var that = this;
-
     if (e.detail.value.feedback.length == 0) {
       this.setData({
         tip: '提示：用户名和密码不能为空！',
@@ -122,7 +126,6 @@ Page({
             error: function (result, error) {
               // 添加失败
               console.log("[cheng-feedback.js] 提交反馈失败");
-
             }
           });
         }

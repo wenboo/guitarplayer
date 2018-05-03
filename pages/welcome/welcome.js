@@ -13,7 +13,7 @@ Page({
 
 
   /**
-   *  进入“吉他曲谱” 模块
+   *  进入「吉他曲谱」 模块
    */
   clickButtonGuitarChart: function () {
     console.log("[cheng-welcome.js]点击了 GuitarChart");
@@ -39,7 +39,7 @@ Page({
   },
 
   /**
-   * 进入 “吉他视频” 模块
+   * 进入 「吉他视频」 模块
    */
   clickButtonGuitarVideo: function () {
     if (!this.data.forwardPage) 
@@ -64,7 +64,7 @@ Page({
   },
 
   /**
-     * 进入 “反馈” 模块
+     * 进入 「反馈」 模块
      */
   clickFeedback: function () {
 
@@ -87,6 +87,8 @@ Page({
       })
     }
   },
+
+  
   /**
    * 生命周期函数--监听页面加载
    */

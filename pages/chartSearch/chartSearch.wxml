@@ -3,16 +3,21 @@
 <import src="../template/list.wxml" />
 
 <form bindsubmit="searchSubmit">
-<view class="input_view">
-  <input class="input" bindfocus="onFocus" bindblur="lostFocus" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true" confirm-type="search"/>
-</view>
+  <view class="input_view">
+    <input class="input" bindfocus="onFocus" bindblur="lostFocus" placeholder-style="color: gray" type="text" maxlength="15" placeholder="搜索" focus="true" confirm-type="search" />
+  </view>
 </form>
+
+<view class="search_no_results" style="display:{{noResultsTipHidden}}" bindtap="clickNoResultsTip">
+  <text class="text">咦 似乎没找到 反馈一下</text>
+</view>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="cid" bindtap="clickButton" data-index="{{index}}">
   <template is="listTemp" data="{{listTitle:item.title,listContent:item.content}}" />
 </view>
 
+
 <view class="bord"></view>
 
-<view class="returnTop"  wx:if="{{scrollTop.goTop_show}}" catchtap="goTopFun">
+<view class="returnTop" wx:if="{{scrollTop.goTop_show}}" catchtap="goTopFun">
 </view>

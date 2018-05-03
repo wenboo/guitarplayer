@@ -2,10 +2,11 @@
 
 <form bindsubmit="formBindsubmit">
 
-<view class="feedback_view">
-<textarea name="feedback" class="feedback" placeholder-style="color: gray" maxlength="200" placeholder="您的反馈有助于我们更好的改善"/>
-</view>
-<button class="button_view" formType="submit"><text class="button_text">提交</text></button>
+<textarea class="feedback_view" value="{{feedbackText}}" name="feedback" placeholder-style="color: gray" maxlength="100" placeholder="需要哪些更多的吉他曲谱或吉他视频"/>
+
+<button class="button_view" formType="submit">
+<text class="button_text">提交</text>
+</button>
 
 </form>
 
