@@ -1,5 +1,6 @@
 // welcome.js
 
+var logHeader = "[cheng-welcome.js]";
 var that;
 
 Page({
@@ -8,7 +9,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    forwardPage:false       // 已经点击了跳转了
+    forwardPage: false       // 已经点击了跳转了
   },
 
 
@@ -16,9 +17,8 @@ Page({
    *  进入「吉他曲谱」 模块
    */
   clickButtonGuitarChart: function () {
-    console.log("[cheng-welcome.js]点击了 GuitarChart");
-    if(!this.data.forwardPage)
-    {
+    console.log(logHeader + "点击了 GuitarChart");
+    if (!this.data.forwardPage) {
       this.setData({
         forwardPage: true
       })
@@ -35,19 +35,18 @@ Page({
           // complete  
         }
       })
-    } 
+    }
   },
 
   /**
    * 进入 「吉他视频」 模块
    */
   clickButtonGuitarVideo: function () {
-    if (!this.data.forwardPage) 
-    {
+    if (!this.data.forwardPage) {
       this.setData({
         forwardPage: true
       })
-  
+
       wx.navigateTo({
         url: '../video/video',
         success: function (res) {
@@ -64,8 +63,8 @@ Page({
   },
 
   /**
-     * 进入 「反馈」 模块
-     */
+   * 进入 「反馈」 模块
+   */
   clickFeedback: function () {
 
     if (!this.data.forwardPage) {
@@ -88,27 +87,27 @@ Page({
     }
   },
 
-  
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     that = this;
-    console.log("[cheng-welcome.js]onLoad");
+    console.log(logHeader + "---------- onLoad ----------");
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    console.log("[cheng-welcome.js]onReady");
+    console.log(logHeader + "---------- onReady ----------");
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log("[cheng-welcome.js]onShow");
+    console.log(logHeader + "---------- onShow ----------");
     this.setData({
       forwardPage: false
     })
@@ -118,34 +117,34 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log("[cheng-welcome.js]onUnload");
+    console.log(logHeader + "---------- onUnload ----------");
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+
   }
 })

@@ -1,5 +1,6 @@
 // feedback.js
 
+var logHeader = "[cheng-feedback.js]";
 var Bmob = require("../../utils/bmob.js");
 
 Page({
@@ -15,10 +16,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log("接收到的参数是str=" + options.str);
+    console.log(logHeader+"要搜索的内容是：" + options.str);
     if(options.str != null)
     {
-      console.log("hi");
       this.setData({
         feedbackText:options.str
       })
@@ -104,14 +104,15 @@ Page({
           feedback.set("province", province);
           //feedback.set("gender", gender);
           feedback.set("content", content);
-          //添加数据，第一个入口参数是null
+          // 添加数据，第一个入口参数是null
           feedback.save(null, {
             success: function (result) {
               // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
-              console.log("[cheng-feedback.js] 提交反馈成功");
-
-              wx.navigateTo({
-                url: '../welcome/welcome',
+              console.log(logHeader+"提交反馈成功");
+    
+              wx.navigateBack({
+                //url: '../welcome/welcome',
+                delta:2,                      /* 两层弹栈，直接返回到搜索主界面 */
                 success: function (res) {
 
                 },
@@ -125,7 +126,7 @@ Page({
             },
             error: function (result, error) {
               // 添加失败
-              console.log("[cheng-feedback.js] 提交反馈失败");
+              console.log(logHeader+"提交反馈失败");
             }
           });
         }

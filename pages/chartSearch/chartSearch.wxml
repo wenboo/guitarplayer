@@ -8,8 +8,8 @@
   </view>
 </form>
 
-<view class="search_no_results" style="display:{{noResultsTipHidden}}" bindtap="clickNoResultsTip">
-  <text class="text">咦 似乎没找到 反馈一下</text>
+<view class="search_no_results_view" style="display:{{noResultsTipHidden}}" bindtap="clickNoResultsTip">
+  <text class="search_no_results_text">咦 似乎没找到 反馈一下</text>
 </view>
 
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="cid" bindtap="clickButton" data-index="{{index}}">

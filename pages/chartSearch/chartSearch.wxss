@@ -19,9 +19,14 @@ page {
   margin-top: 15px;
 }
 
-.search_no_results{
+.search_no_results_view{
  text-align: center;
  margin-top: 200px;
+}
+
+.search_no_results_text{
+  font-size: 15px;
+  color: #a4a4a4;
 }
 
 navigator {
@@ -82,8 +87,3 @@ navigator {
 }
 
 .bord{height:1px;width:100%;position:fixed;bottom: 0;left:0;background:#ccc;}
-
-.text{
-  font-size: 15px;
-  color: #cdcdcd;
-}

@@ -4,6 +4,10 @@
 </view>
 </form>
 
+<view class="search_no_results_view" style="display:{{noResultsTipHidden}}" bindtap="clickNoResultsTip">
+  <text class="search_no_results_text">咦 似乎没找到 反馈一下</text>
+</view>
+
 <view class="content_detail" wx:for-items="{{moodList}}" wx:key="url" data-index="{{index}}" bindtap="onVideoImageClick">
     <image style="display:{{item.videoImage}}; width:100%; height=180px" mode="scaleToFill" src="{{item.image}}"></image>
     <video id="{{item.videoId}}" style="display:{{item.videoPlayHidden}}; width:100%; height=180px" object-fit="fill" src="{{item.url}}"></video>

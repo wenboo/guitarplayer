@@ -19,6 +19,16 @@ page {
   margin-top: 15px;
 }
 
+.search_no_results_view{
+ text-align: center;
+ margin-top: 200px;
+}
+
+.search_no_results_text{
+  font-size: 15px;
+  color: #a4a4a4;
+}
+
 navigator {
   background: #fff;
   margin-bottom: 30rpx;
